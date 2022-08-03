@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>list products</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.12.1/datatables.min.css"/>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+</head>
+<body>
+<div class="container">
+    <section>
+        <div th:replace="header :: header"></div>
+        <hr/>
+        <h2>list products</h2>
+        <div class="title-main text-center mx-auto mb-md-5 mb-4" style="max-width:500px;">
+            <h3 class="title-style" th:text="${'Welcome - ' + username}"></h3>
+            <p class="" th:text="${'Role  ' + roles}"></p>
+        </div>
+        <hr/>
+        <table class="table table-bordered table-stiped" id="product-table">
+            <thead>
+            <tr>
+                <th>Reference</th>
+                <th>Name</th>
+                <th>Categorie</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th sec:authorize="hasRole('ROLE_MANAGER')">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product:${products}">
+                <td th:text="${product.reference}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.categories}"></td>
+                <td th:text="${product.quantity}"></td>
+                <td th:text="${product.price}"></td>
+                <td sec:authorize="hasRole('ROLE_MANAGER')">
+                    <a th:href="@{/updateForm(productId=${product.id})}" class="btn btn-info">Update</a>
+                    <a th:href="@{/deleteProduct(productId=${product.id})}" class="btn btn-danger ml-2 ">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr/>
+        <a th:href="@{/addProductForm}" class="btn btn-primary mb-2" sec:authorize="hasRole('ROLE_MANAGER')">Add
+            Product</a>
+    </section>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.12.1/datatables.min.js"></script>
+<script>
+    $(document).ready(function (){
+        $("#product-table").DataTable(
+            {'aoColumnDefs':[{'bSortable': false,'aTargets':[-1]}]}
+        );
+    })
+</script>
+
+
+
+
+</body>
+</html>
