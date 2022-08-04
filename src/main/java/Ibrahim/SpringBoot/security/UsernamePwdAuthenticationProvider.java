@@ -1,4 +1,5 @@
 package Ibrahim.SpringBoot.security;
+
 import Ibrahim.SpringBoot.model.Agent;
 import Ibrahim.SpringBoot.model.Roles;
 import Ibrahim.SpringBoot.repository.AgentRepository;
@@ -17,11 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UsernamePwdAuthenticationProvider  implements AuthenticationProvider {
+public class UsernamePwdAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private AgentRepository aRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
@@ -29,7 +31,8 @@ public class UsernamePwdAuthenticationProvider  implements AuthenticationProvide
         String pwd = authentication.getCredentials().toString();
         Agent agent = aRepo.readByEmail(email);
         if (null != agent && agent.getId() > 0 &&
-                passwordEncoder.matches(pwd,agent.getPwd())) {
+                passwordEncoder.matches(pwd, agent.getPwd()) &&
+                agent.getStatus().equals("Accepted")){
             return new UsernamePasswordAuthenticationToken(
                     email, null, getGrantedAuthorities(agent.getRoles()));
         } else {

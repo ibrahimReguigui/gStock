@@ -36,7 +36,7 @@
                 <td th:text="${agent.mobileNumber}"></td>
                 <td th:text="${agent.status}"></td>
                 <td >
-                    <a  class="btn btn-info">Update</a>
+                    <a  th:href="@{/updateAgentForm(agentId=${agent.id})}"class="btn btn-info">Update</a>
                     <a th:href="@{/deleteAgent(agentId=${agent.id})}" class="btn btn-danger ml-2 ">Delete</a>
                 </td>
             </tr>

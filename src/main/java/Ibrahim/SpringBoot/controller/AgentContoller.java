@@ -1,6 +1,7 @@
 package Ibrahim.SpringBoot.controller;
 
 import Ibrahim.SpringBoot.model.Agent;
+import Ibrahim.SpringBoot.model.Product;
 import Ibrahim.SpringBoot.repository.AgentRepository;
 import Ibrahim.SpringBoot.service.AgentServiceImp;
 import Ibrahim.SpringBoot.service.RolesServiceImp;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
 @Slf4j
 @Controller
 public class AgentContoller {
@@ -39,27 +41,44 @@ public class AgentContoller {
 
 
     @PostMapping("/saveAgent")
-    public String saveProduct(@Valid @ModelAttribute Agent newA , Errors errors) {
+    public String saveProduct(@Valid @ModelAttribute Agent newA, Errors errors) {
 
-        if (errors.hasErrors()){
-            log.error("form error :"+errors.toString());
+        if (errors.hasErrors()) {
+            log.error("form error :" + errors.toString());
             return "register-agent.html";
+        }
+        if(newA.getRoles().getRoleId()==3){
+            newA.setStatus("Accepted");
         }
         aServ.saveAgent(newA);
         return "redirect:/login?register=true";
     }
 
     @GetMapping("/agentsList")
-    public String agentsList(HttpSession session, Model model){
+    public String agentsList(HttpSession session, Model model) {
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
-        model.addAttribute("agents",aRepo.getAgentsByStore(agent.getStore().getId()));
+        model.addAttribute("agents", aRepo.getAgentsByStore(agent.getStore().getId()));
         return "agentsList.html";
     }
 
 
-     @GetMapping("/deleteAgent")
-    public String deleteAgent(@RequestParam Integer agentId){
+    @GetMapping("/deleteAgent")
+    public String deleteAgent(@RequestParam Integer agentId) {
         aServ.deleteAgent(agentId);
         return "redirect:/agentsList";
-     }
+    }
+
+    @GetMapping("/updateAgentForm")
+    public ModelAndView updateAgent(@RequestParam Integer agentId) {
+        ModelAndView mav = new ModelAndView("updateAgent");
+        mav.addObject("agent", aServ.getAgentById(agentId));
+        return mav;
+    }
+    @PostMapping("updateAgent")
+    public String updateAgent(@ModelAttribute Agent newA){
+        Agent agent=aServ.getAgentById(newA.getId());
+        agent.setStatus(newA.getStatus());
+        aServ.saveAgent(agent);
+        return "redirect:/agentsList";
+    }
 }

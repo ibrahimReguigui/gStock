@@ -2,6 +2,7 @@ package Ibrahim.SpringBoot.controller;
 
 import Ibrahim.SpringBoot.model.Agent;
 import Ibrahim.SpringBoot.service.RolesServiceImp;
+import Ibrahim.SpringBoot.service.StoreServiceImp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,8 @@ public class LoginController {
 
     @Autowired
     private RolesServiceImp rServ;
+    @Autowired
+    private StoreServiceImp sServ;
 
     @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
     public String displayLoginPage(@RequestParam(value = "error", required = false) String error,
@@ -56,6 +59,7 @@ public class LoginController {
     public String registerPage(Model model) {
         model.addAttribute("agent", new Agent());
         model.addAttribute("roles",rServ.getRoles());
+        model.addAttribute("stores",sServ.getStore());
         return "register-agent.html";
     }
 
