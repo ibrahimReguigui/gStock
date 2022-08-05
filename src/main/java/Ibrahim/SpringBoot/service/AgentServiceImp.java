@@ -29,8 +29,19 @@ public class AgentServiceImp implements AgentService {
         aRepo.save(agent);
     }
 
+    public void updateAgent(Agent agent) {
+        aRepo.save(agent);
+    }
+
     public void deleteAgent(Integer id) {
         aRepo.deleteById(id);
     }
+
+    public List<Agent> getAgentsByStore(Long id){
+        return aRepo.getAgentsByStore(id);
+    };
+    public Agent readByEmail(String email){
+        return aRepo.readByEmail(email);
+    };
 
 }

@@ -78,7 +78,7 @@ public class AgentContoller {
     public String updateAgent(@ModelAttribute Agent newA){
         Agent agent=aServ.getAgentById(newA.getId());
         agent.setStatus(newA.getStatus());
-        aServ.saveAgent(agent);
+        aServ.updateAgent(agent);
         return "redirect:/agentsList";
     }
 }

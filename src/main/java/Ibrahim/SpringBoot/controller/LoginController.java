@@ -1,6 +1,7 @@
 package Ibrahim.SpringBoot.controller;
 
 import Ibrahim.SpringBoot.model.Agent;
+import Ibrahim.SpringBoot.service.AgentServiceImp;
 import Ibrahim.SpringBoot.service.RolesServiceImp;
 import Ibrahim.SpringBoot.service.StoreServiceImp;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
@@ -26,6 +29,8 @@ public class LoginController {
     private RolesServiceImp rServ;
     @Autowired
     private StoreServiceImp sServ;
+    @Autowired
+    private AgentServiceImp agentServiceImp;
 
     @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
     public String displayLoginPage(@RequestParam(value = "error", required = false) String error,
@@ -61,6 +66,16 @@ public class LoginController {
         model.addAttribute("roles",rServ.getRoles());
         model.addAttribute("stores",sServ.getStore());
         return "register-agent.html";
+    }
+
+    @GetMapping("/home")
+    public ModelAndView homePage(Authentication authentication, HttpSession session) {
+        ModelAndView mav=new ModelAndView("homePage");
+        Agent agent = agentServiceImp.readByEmail(authentication.getName());
+        session.setAttribute("LoggedInAgent", agent);
+        mav.addObject("username", agent.getName());
+        mav.addObject("role", agent.getRoles().getRoleName());
+        return mav;
     }
 
 

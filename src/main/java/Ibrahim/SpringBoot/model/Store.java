@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @Entity
@@ -16,7 +18,11 @@ public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name, address,Password;
+    private String name, address;
+    @NotBlank(message="Mobile number must not be blank")
+    @Pattern(regexp="(^$|[0-9]{8})",message = "Mobile number must be 10 digits")
+    private String mobileNumber;
+
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE,targetEntity = Product.class)
     private List<Product> Products;

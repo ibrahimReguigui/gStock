@@ -13,4 +13,7 @@ public interface AgentService {
     public void saveAgent(Agent agent);
 
     public void deleteAgent(Integer id);
+
+     public List<Agent> getAgentsByStore(Long id);
+    Agent readByEmail(String email);
 }
