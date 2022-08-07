@@ -40,7 +40,7 @@ public class ProductContoller {
 private StoreServiceImp sServ;
     @GetMapping("/showProducts")
     public ModelAndView showProducts(Authentication authentication, HttpSession session) {
-        ModelAndView mav=new ModelAndView("list-products");
+        ModelAndView mav = new ModelAndView("list-products");
         Agent agent = aRepo.readByEmail(authentication.getName());
         session.setAttribute("LoggedInAgent", agent);
         mav.addObject("products", pRepo.getAllStoreProduct(agent.getStore().getId()));

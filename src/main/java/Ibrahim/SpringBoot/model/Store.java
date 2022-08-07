@@ -18,10 +18,13 @@ public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name, address;
+    @NotBlank(message="Name must not be blank")
+    private String storeName;
+    @NotBlank(message="Address must not be blank")
+    private String  address;
     @NotBlank(message="Mobile number must not be blank")
-    @Pattern(regexp="(^$|[0-9]{8})",message = "Mobile number must be 10 digits")
-    private String mobileNumber;
+    @Pattern(regexp="(^$|[0-9]{8})",message = "Mobile number must be 8 digits")
+    private String storeNumber;
 
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY,
             cascade = CascadeType.REMOVE,targetEntity = Product.class)

@@ -134,11 +134,11 @@ public class BillController {
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
         ModelAndView mav = new ModelAndView("showBills");
 
-        Store store=sServ.getStoreById(agent.getStore().getId());
-        if(agent.getRoles().getRoleId()==2){
+        Store store = sServ.getStoreById(agent.getStore().getId());
+        if (agent.getRoles().getRoleId() == 2) {
             mav.addObject("bills", bRep.getbillsByAgent(agent.getId()));
-        }else{
-            mav.addObject("bills",bRep.getBillsByStore(agent.getStore().getId()));
+        } else {
+            mav.addObject("bills", bRep.getBillsByStore(agent.getStore().getId()));
         }
         return mav;
     }
@@ -187,6 +187,6 @@ public class BillController {
             product.setBill(null);
             pServ.saveProduct(product);
         }
-        return "redirect:/billDetails?billId="+bill.getId();
+        return "redirect:/billDetails?billId=" + bill.getId();
     }
 }

@@ -13,4 +13,6 @@ public interface StoreService {
     public void saveStore(Store store);
 
     public void deleteStore(long id);
+    public Store getStoreByStoreNumber(String mobileNumber);
+
 }

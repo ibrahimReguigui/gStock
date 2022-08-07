@@ -2,14 +2,18 @@ package Ibrahim.SpringBoot.controller;
 
 import Ibrahim.SpringBoot.model.Agent;
 import Ibrahim.SpringBoot.model.Product;
+import Ibrahim.SpringBoot.model.Store;
 import Ibrahim.SpringBoot.repository.AgentRepository;
 import Ibrahim.SpringBoot.service.AgentServiceImp;
 import Ibrahim.SpringBoot.service.RolesServiceImp;
+import Ibrahim.SpringBoot.service.StoreServiceImp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,62 +27,67 @@ import javax.validation.Valid;
 @Controller
 public class AgentContoller {
     @Autowired
-    private AgentServiceImp aServ;
+    private AgentServiceImp agentServiceImp;
     @Autowired
-    private AgentRepository aRepo;
-
-  /*  @Autowired
-    private RolesServiceImp rServ;
-*/
-    /*@GetMapping("/addAgentForm")
-    public ModelAndView addProductForm() {
-        log.error("aaaaaaaaaaaaaaaaaaa"+rServ.getRoles().toString());
-        ModelAndView mav = new ModelAndView("register-agent");
-        mav.addObject("agent", new Agent());
-        mav.addObject("roles",rServ.getRoles());
-        return mav;
-    }*/
+    private AgentRepository agentRepository;
+    @Autowired
+    private StoreServiceImp storeServiceImp;
+    @Autowired
+    private RolesServiceImp rolesServiceImp;
 
 
     @PostMapping("/saveAgent")
-    public String saveProduct(@Valid @ModelAttribute Agent newA, Errors errors) {
+    public String saveAgent(@ModelAttribute Agent newA) {
+        agentServiceImp.saveAgent(newA);
+        return "redirect:/login?register=true";
+    }
 
-        if (errors.hasErrors()) {
-            log.error("form error :" + errors.toString());
+
+    @PostMapping("/finalizeRegistration")
+    public String finalizeRegistration(@Valid @ModelAttribute Agent newA, Errors errors, Model model, BindingResult bindingResult) {
+        model.addAttribute("roles", rolesServiceImp.getRoles());
+        if (agentServiceImp.agentExist(newA.getEmail())) {
+            bindingResult.addError(new FieldError("newA", "email", "Email already exist"));
+        }
+        if (bindingResult.hasErrors()) {
             return "register-agent.html";
         }
-        if(newA.getRoles().getRoleId()==3){
-            newA.setStatus("Accepted");
+        if (newA.getRoles().getRoleId() == 3) {
+            model.addAttribute("agent", newA);
+            model.addAttribute("store", new Store());
+            return "store-Registration-Form.html";
         }
-        aServ.saveAgent(newA);
-        return "redirect:/login?register=true";
+        model.addAttribute("agent", newA);
+        model.addAttribute("stores", storeServiceImp.getStore());
+        return "finalizeRegistration.html";
     }
 
     @GetMapping("/agentsList")
     public String agentsList(HttpSession session, Model model) {
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
-        model.addAttribute("agents", aRepo.getAgentsByStore(agent.getStore().getId()));
+        model.addAttribute("agents", agentRepository.getAgentsByStore(agent.getStore().getId()));
         return "agentsList.html";
     }
 
 
     @GetMapping("/deleteAgent")
     public String deleteAgent(@RequestParam Integer agentId) {
-        aServ.deleteAgent(agentId);
+        agentServiceImp.deleteAgent(agentId);
         return "redirect:/agentsList";
     }
 
     @GetMapping("/updateAgentForm")
     public ModelAndView updateAgent(@RequestParam Integer agentId) {
         ModelAndView mav = new ModelAndView("updateAgent");
-        mav.addObject("agent", aServ.getAgentById(agentId));
+        mav.addObject("agent", agentServiceImp.getAgentById(agentId));
         return mav;
     }
+
     @PostMapping("updateAgent")
-    public String updateAgent(@ModelAttribute Agent newA){
-        Agent agent=aServ.getAgentById(newA.getId());
+    public String updateAgent(@ModelAttribute Agent newA) {
+        Agent agent = agentServiceImp.getAgentById(newA.getId());
         agent.setStatus(newA.getStatus());
-        aServ.updateAgent(agent);
+        agentServiceImp.updateAgent(agent);
         return "redirect:/agentsList";
     }
 }

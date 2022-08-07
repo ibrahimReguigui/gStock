@@ -45,11 +45,12 @@ public class Agent extends BaseEntity{
     @JoinColumn(name = "store_id",referencedColumnName = "id")
     private Store store;
     @NotBlank(message="Mobile number must not be blank")
-    @Pattern(regexp="(^$|[0-9]{8})",message = "Mobile number must be 10 digits")
+    @Pattern(regexp="(^$|[0-9]{8})",message = "Mobile number must be 8 digits")
     private String mobileNumber;
 
     @NotBlank(message="Email must not be blank")
     @Email(message = "Please provide a valid email address" )
+    @Column(unique=true)
     private String email;
 
     @NotBlank(message="Confirm Email must not be blank")

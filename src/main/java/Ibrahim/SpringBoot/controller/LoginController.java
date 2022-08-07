@@ -26,9 +26,7 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
 
     @Autowired
-    private RolesServiceImp rServ;
-    @Autowired
-    private StoreServiceImp sServ;
+    private RolesServiceImp rolesServiceImp;
     @Autowired
     private AgentServiceImp agentServiceImp;
 
@@ -63,14 +61,13 @@ public class LoginController {
     @GetMapping("/register")
     public String registerPage(Model model) {
         model.addAttribute("agent", new Agent());
-        model.addAttribute("roles",rServ.getRoles());
-        model.addAttribute("stores",sServ.getStore());
+        model.addAttribute("roles", rolesServiceImp.getRoles());
         return "register-agent.html";
     }
 
     @GetMapping("/home")
     public ModelAndView homePage(Authentication authentication, HttpSession session) {
-        ModelAndView mav=new ModelAndView("homePage");
+        ModelAndView mav = new ModelAndView("homePage");
         Agent agent = agentServiceImp.readByEmail(authentication.getName());
         session.setAttribute("LoggedInAgent", agent);
         mav.addObject("username", agent.getName());

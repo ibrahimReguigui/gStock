@@ -1,17 +1,20 @@
 package Ibrahim.SpringBoot.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Data
 @Entity
-public class Roles extends BaseEntity {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Roles  {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
-    @GenericGenerator(name = "native",strategy = "native")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int roleId;
 
     private String roleName;
