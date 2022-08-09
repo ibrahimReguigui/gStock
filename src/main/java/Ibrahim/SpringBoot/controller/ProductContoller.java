@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,18 +37,15 @@ public class ProductContoller {
     @Autowired
     private ProductRepository pRepo;
     @Autowired
-    private BillServiceImp bServ;
-@Autowired
-private StoreServiceImp sServ;
+    private BillServiceImp billServiceImp;
+    @Autowired
+    private StoreServiceImp sServ;
+
     @GetMapping("/showProducts")
     public ModelAndView showProducts(Authentication authentication, HttpSession session) {
         ModelAndView mav = new ModelAndView("list-products");
-        Agent agent = aRepo.readByEmail(authentication.getName());
-        session.setAttribute("LoggedInAgent", agent);
+        Agent agent = (Agent) session.getAttribute("LoggedInAgent");
         mav.addObject("products", pRepo.getAllStoreProduct(agent.getStore().getId()));
-        mav.addObject("username", agent.getName());
-        mav.addObject("roles", authentication.getAuthorities().toString());
-        mav.addObject("newQuantity", 0);
         return mav;
     }
 
@@ -92,15 +91,20 @@ private StoreServiceImp sServ;
         mav.addObject("product", pServ.getProductById(productId));
         return mav;
     }
+
     @PostMapping("/splitProduct")
-    public String splitProduct(@ModelAttribute Product product, HttpSession session) {
+    public String splitProduct(@ModelAttribute Product product, HttpSession session, BindingResult bindingResult) {
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
-        Product ancientP=pServ.getProductById(product.getId());
-        if(ancientP.getQuantity()<product.getQuantity()){
+        Product ancientP = pServ.getProductById(product.getId());
+        if (ancientP.getQuantity() < product.getQuantity()) {
+            bindingResult.addError(new FieldError("product", "quantity", "Sorry insufficient quality in stock "));
+            return "splitProductForm";
+        }
+        if (product.getQuantity() == 0) {
             return "redirect:/addProductToBillForm";
         }
 
-        Product newP =new Product();
+        Product newP = new Product();
         newP.setStore(sServ.getStoreById(agent.getStore().getId()));
         newP.setCategories(ancientP.getCategories());
         newP.setName(ancientP.getName());
@@ -109,17 +113,18 @@ private StoreServiceImp sServ;
         newP.setQuantity(product.getQuantity());
         newP.setCreatedBy(ancientP.getCreatedBy());
         newP.setCreatedAt(ancientP.getCreatedAt());
-        Bill bill=(Bill)session.getAttribute("bill");
-        newP.setBill(bill);
+        Bill bill = (Bill) session.getAttribute("bill");
+        Bill bill2=billServiceImp.getBillById(bill.getId());
+        newP.setBill(bill2);
         pServ.saveProduct(newP);
 
 
-        ancientP.setQuantity(ancientP.getQuantity()-newP.getQuantity());
-        bill.setTotal(bill.getTotal()+newP.getQuantity()*newP.getPrice());
-        bServ.saveBill(bill);
-        if (ancientP.getQuantity()==0){
+        ancientP.setQuantity(ancientP.getQuantity() - newP.getQuantity());
+        bill2.setTotal(bill2.getTotal() + newP.getQuantity() * newP.getPrice());
+        billServiceImp.saveBill(bill2);
+        if (ancientP.getQuantity() == 0) {
             pServ.deleteProduct(ancientP.getId());
-        }else {
+        } else {
             pServ.saveProduct(ancientP);
         }
         return "redirect:/addProductToBillForm";

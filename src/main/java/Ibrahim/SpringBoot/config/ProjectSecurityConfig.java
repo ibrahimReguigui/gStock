@@ -16,14 +16,12 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http)throws Exception{
         http.csrf().ignoringAntMatchers("/register")
                 .and().authorizeRequests()
-                .mvcMatchers("/showProducts").authenticated()
                 .mvcMatchers("/login").permitAll()
                 .mvcMatchers("/register").permitAll()
                 .and().formLogin().loginPage("/login")
                 .defaultSuccessUrl("/home")
                 .failureUrl("/login?error=true").permitAll()
                 .and().logout().logoutSuccessUrl("/login?logout=true").invalidateHttpSession(true).permitAll()
-
                 .and().httpBasic();
     }
     @Bean

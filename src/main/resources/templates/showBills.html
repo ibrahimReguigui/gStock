@@ -34,11 +34,11 @@
             <tr th:each="bill:${bills}">
                 <td th:text="${bill.getClient()}"></td>
                 <td th:text="${bill.getStatus()}"></td>
-                <td th:text="${bill.getCreatedAt()}"></td>
+                <td th:text="${#temporals.format(bill.createdAt, 'yyyy-MM-dd   hh:mm:ss ')}"></td>
                 <td sec:authorize="hasRole('ROLE_MANAGER')" th:text="${bill.createdBy}"></td>
                 <td th:text="${bill.getTotal()}"></td>
                 <td >
-                    <a sec:authorize="hasRole('ROLE_MANAGER')" th:href="@{/deleteBill(billId=${bill.id})}" class="btn btn-info">Cancel</a>
+                    <a sec:authorize="hasRole('ROLE_MANAGER')" th:href="@{/deleteBill(billId=${bill.id})}" class="btn btn-danger">Cancel</a>
                     <a th:href="@{/billDetails(billId=${bill.id})}" class="btn btn-info">Details</a>
                 </td>
             </tr>

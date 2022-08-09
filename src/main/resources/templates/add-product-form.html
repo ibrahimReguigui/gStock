@@ -10,11 +10,6 @@
 <div class="container">
     <div th:replace="header :: header"></div>
     <hr/>
-    <div class="title-main text-center mx-auto mb-md-5 mb-4" style="max-width:500px;">
-        <h3 class="title-style" th:text="${ username}"></h3>
-        <p class="" th:text="${'Role  ' + roles}"></p>
-    </div>
-    <hr/>
     <h2>Add Product</h2>
     <hr/>
     <div style="text-align: center">
@@ -27,7 +22,7 @@
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Reference</label>
             <div class="col-sm-10">
-                <input type="text" th:field="*{reference}" placeholder="Enter name" class="form-control col-4 mb-4">
+                <input type="text" th:field="*{reference}" placeholder="Enter reference" class="form-control col-4 mb-4">
             </div>
         </div>
         <div class="form-group row">
@@ -39,7 +34,7 @@
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Categorie</label>
             <div class="col-sm-10">
-                <input type="text" th:field="*{categories}" placeholder="Enter categories"
+                <input type="text" th:field="*{categories}" placeholder="Enter categorie"
                        class="form-control col-4 mb-4">
             </div>
         </div>

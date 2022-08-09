@@ -14,12 +14,9 @@
         <div th:replace="header :: header"></div>
         <hr/>
         <h2>Bill Details</h2>
-        <div class="title-main text-center mx-auto mb-md-5 mb-4" style="max-width:500px;">
-            <h3 class="title-style" th:text="${'Bill id - ' + bill.getId()}"></h3>
-            <h3 class="title-style" th:text="${'Bill client - ' + bill.getClient()}"></h3>
-        </div>
         <hr/>
-        <a class="btn btn-secondary ml-2" th:href="@{/showBills}">Back</a>
+        <p class="title-style" th:text="${#temporals.format(bill.createdAt, 'yyyy-MM-dd  | hh:mm:ss ')}"></p>
+        <h3 class="title-style" th:text="${bill.getClient()}"></h3>
         <hr/>
         <table class="table table-bordered table-stiped" id="bill-table">
             <thead>
@@ -52,8 +49,9 @@
             </tr>
             </tfoot>
         </table>
-        <a sec:authorize="hasRole('ROLE_MANAGER')" class="btn btn-secondary ml-2" th:href="@{/cancelBill(billId=${bill.getId()})}">Cancel</a>
-
+        <a class="btn btn-secondary ml-2" th:href="@{/showBills}">Back</a>
+        <a sec:authorize="hasRole('ROLE_MANAGER')" class="btn btn-danger ml-2" th:href="@{/cancelBill(billId=${bill.getId()})}">Cancel</a>
+        <a th:href="@{/createPdf(billId=${bill.id})}" class="btn btn-primary ml-2 "> Download </a>
     </section>
 </div>
 <!--

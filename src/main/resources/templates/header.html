@@ -10,13 +10,17 @@
 </head>
 <body>
 <header  >
-    <nav class="navbar navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-    <div class=" navbar-collapse"  >
-        <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll">
+    <div class="collapse navbar-collapse"  >
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item" sec:authorize="isAnonymous()">
                 <a  th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"
                     th:href="@{/login}" class="nav-link">LogIn</a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a  th:classappend="${#httpServletRequest.getRequestURI() == '/home' ? 'active':''}"
+                    th:href="@{/home}" class="nav-link">Home</a>
             </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
                 <a  th:classappend="${#httpServletRequest.getRequestURI() == '/showProducts' ? 'active':''}"
@@ -28,13 +32,13 @@
             </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
                 <a  th:classappend="${#httpServletRequest.getRequestURI() == '/showBills' ? 'active':''}"
-                    th:href="@{/showBills}" class="nav-link">Bills</a>
+                    th:href="@{/showBills}" class="nav-link">Bills List</a>
             </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
+            <li class="nav-item" sec:authorize="hasRole('ROLE_VENDOR')">
                 <a  th:classappend="${#httpServletRequest.getRequestURI() == '/newBill' ? 'active':''}"
                     th:href="@{/billForm}" class="nav-link">New Bill</a>
             </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
+            <li class="nav-item"  sec:authorize="isAuthenticated()">
                 <a  th:classappend="${#httpServletRequest.getRequestURI() == '/logout' ? 'active':''}"
                     th:href="@{/logout}" class="nav-link">Logout</a>
             </li>

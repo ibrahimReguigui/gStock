@@ -10,10 +10,7 @@
 <div class="container">
     <div th:replace="header :: header"></div>
     <hr/>
-    <div class="title-main text-center mx-auto mb-md-5 mb-4" style="max-width:500px;">
-    </div>
-    <hr/>
-    <h2>Split Form</h2>
+    <h2>How much do you need ?</h2>
     <hr/>
     <div style="text-align: center">
         <ul>
@@ -58,11 +55,11 @@
             </div>
         </div>
         <input type="hidden" th:field="*{id}">
-
-        <button class="btn btn-primary ml-2" type="submit">Save</button>
+        <a class="btn btn-secondary ml-2" th:href="@{/addProductToBillForm}">Back</a>
+        <button class="btn btn-primary ml-2" type="submit">Reserver</button>
     </form>
     <hr/>
-    <a class="btn btn-secondary ml-2" th:href="@{/addProductToBillForm}">Back</a>
+
 </div>
 </body>
 </html>

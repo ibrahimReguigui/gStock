@@ -1,6 +1,7 @@
 package Ibrahim.SpringBoot.service;
 
 import Ibrahim.SpringBoot.model.Bill;
+import Ibrahim.SpringBoot.model.Product;
 import Ibrahim.SpringBoot.repository.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,25 +11,29 @@ import java.util.List;
 public class BillServiceImp implements BillService {
 
     @Autowired
-    private BillRepository bRepo;
+    private BillRepository billRepository;
 
     @Override
     public List<Bill> getAllBill() {
-        return bRepo.findAll();
+        return billRepository.findAll();
     }
 
     @Override
     public Bill getBillById(Integer billId) {
-        return bRepo.findById(billId).get();
+        return billRepository.findById(billId).get();
     }
 
     @Override
     public void deleteBill(Integer billId) {
-        bRepo.deleteById(billId);
+        billRepository.deleteById(billId);
     }
 
     @Override
     public void saveBill(Bill newB) {
-        bRepo.save(newB);
+        billRepository.save(newB);
+    }
+    @Override
+    public List<Product> getBillProducts(Integer id){
+        return billRepository.getBillProducts(id);
     }
 }

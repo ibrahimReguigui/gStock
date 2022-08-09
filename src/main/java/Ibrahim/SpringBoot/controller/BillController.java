@@ -11,6 +11,7 @@ import Ibrahim.SpringBoot.service.ProductServiceImp;
 import Ibrahim.SpringBoot.service.StoreServiceImp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -108,7 +109,7 @@ public class BillController {
             }
         }
         bServ.deleteBill(billId);
-        return "redirect:/showProducts";
+        return "redirect:/showBills";
     }
 
     @GetMapping("/removeProduct")
@@ -189,4 +190,6 @@ public class BillController {
         }
         return "redirect:/billDetails?billId=" + bill.getId();
     }
+
+
 }
