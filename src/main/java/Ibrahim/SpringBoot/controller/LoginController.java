@@ -2,8 +2,7 @@ package Ibrahim.SpringBoot.controller;
 
 import Ibrahim.SpringBoot.model.Agent;
 import Ibrahim.SpringBoot.service.AgentServiceImp;
-import Ibrahim.SpringBoot.service.RolesServiceImp;
-import Ibrahim.SpringBoot.service.StoreServiceImp;
+import Ibrahim.SpringBoot.service.RoleServiceImp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -26,7 +25,7 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
 
     @Autowired
-    private RolesServiceImp rolesServiceImp;
+    private RoleServiceImp roleServiceImp;
     @Autowired
     private AgentServiceImp agentServiceImp;
 
@@ -61,7 +60,7 @@ public class LoginController {
     @GetMapping("/register")
     public String registerPage(Model model) {
         model.addAttribute("agent", new Agent());
-        model.addAttribute("roles", rolesServiceImp.getRoles());
+        model.addAttribute("roles", roleServiceImp.getRoles());
         return "register-agent.html";
     }
 

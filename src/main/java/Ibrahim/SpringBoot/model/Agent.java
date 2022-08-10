@@ -32,15 +32,16 @@ import java.util.List;
 })
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Agent extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotBlank(message="Name can't be blank")
+    @Size(min=3, message="Name must be at least 3 characters long")
     private String name;
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST, targetEntity = Roles.class)
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST, targetEntity = Role.class)
     @JoinColumn(name = "role_id", referencedColumnName = "roleId",nullable = false)
-    private Roles roles;
+    private Role roles;
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "store_id",referencedColumnName = "id")
     private Store store;

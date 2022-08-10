@@ -1,7 +1,7 @@
 package Ibrahim.SpringBoot.security;
 
 import Ibrahim.SpringBoot.model.Agent;
-import Ibrahim.SpringBoot.model.Roles;
+import Ibrahim.SpringBoot.model.Role;
 import Ibrahim.SpringBoot.repository.AgentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -40,7 +40,7 @@ public class UsernamePwdAuthenticationProvider implements AuthenticationProvider
         }
     }
 
-    private List<GrantedAuthority> getGrantedAuthorities(Roles roles) {
+    private List<GrantedAuthority> getGrantedAuthorities(Role roles) {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + roles.getRoleName()));
         return grantedAuthorities;

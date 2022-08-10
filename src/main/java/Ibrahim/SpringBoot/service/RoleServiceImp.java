@@ -1,29 +1,29 @@
 package Ibrahim.SpringBoot.service;
 
-import Ibrahim.SpringBoot.model.Roles;
-import Ibrahim.SpringBoot.repository.RolesRepository;
+import Ibrahim.SpringBoot.model.Role;
+import Ibrahim.SpringBoot.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 @Service
-public class RolesServiceImp implements RolesService {
+public class RoleServiceImp implements RoleService {
     @Autowired
-    private RolesRepository rRepo;
+    private RoleRepository rRepo;
 
     @Override
-    public List<Roles> getRoles() {
+    public List<Role> getRoles() {
         return rRepo.findAll();
     }
 
     @Override
-    public Optional<Roles> getRoleById(Integer id) {
+    public Optional<Role> getRoleById(Integer id) {
         return rRepo.findById(id);
     }
 
     @Override
-    public void saveRole(Roles role) {
+    public void saveRole(Role role) {
         rRepo.save(role);
     }
 

@@ -13,32 +13,39 @@ import java.util.Optional;
 public class StoreServiceImp implements StoreService {
 
     @Autowired
-    private StoreRepository sRep;
+    private StoreRepository storeRepository;
 
     @Override
     public List<Store> getStore() {
-        return sRep.findAll();
+        return storeRepository.findAll();
     }
 
     @Override
     public Store getStoreById(long id) {
-        return sRep.findById(id).get();
+        return storeRepository.findById(id).get();
     }
 
     @Override
     public void saveStore(Store store) {
-        sRep.save(store);
+        storeRepository.save(store);
     }
 
     @Override
     public void deleteStore(long id) {
-        sRep.deleteById(id);
+        storeRepository.deleteById(id);
     }
 
     @Override
-    public Store getStoreByStoreNumber(String mobileNumber){
-        return sRep.getStoreByStoreNumber(mobileNumber);
-    };
+    public Store getStoreByStoreNumber(String mobileNumber) {
+        return storeRepository.getStoreByStoreNumber(mobileNumber);
+    }
 
+    @Override
+    public Optional<Store> findStoreByStoreNumber(String storeNumber) {
+        return storeRepository.findStoreByStoreNumber(storeNumber);
+    }
+    public boolean numberExist(String storeNumber) {
+        return findStoreByStoreNumber(storeNumber).isPresent();
+    }
 
 }

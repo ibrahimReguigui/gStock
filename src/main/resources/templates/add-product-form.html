@@ -12,23 +12,20 @@
     <hr/>
     <h2>Add Product</h2>
     <hr/>
-    <div style="text-align: center">
-        <ul>
-            <li class="alert alert-danger" role="alert" th:each="error :${#fields.errors('product.*')}" th:text="
-                ${error}"/>
-        </ul>
-    </div>
     <form th:action="@{/saveProduct}" th:object="${product}" method="POST">
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Reference</label>
             <div class="col-sm-10">
-                <input type="text" th:field="*{reference}" placeholder="Enter reference" class="form-control col-4 mb-4">
+                <input type="text" th:field="*{reference}" placeholder="Enter reference"
+                       class="form-control col-4 mb-4">
+                <div th:if="${#fields.hasErrors('reference')}" th:errors="*{reference}"  class="alert alert-danger col-4 " ></div>
             </div>
         </div>
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Name</label>
             <div class="col-sm-10">
                 <input type="text" th:field="*{name}" placeholder="Enter name" class="form-control col-4 mb-4">
+                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"  class="alert alert-danger col-4 "></div>
             </div>
         </div>
         <div class="form-group row">
@@ -36,25 +33,29 @@
             <div class="col-sm-10">
                 <input type="text" th:field="*{categories}" placeholder="Enter categorie"
                        class="form-control col-4 mb-4">
+                <div th:if="${#fields.hasErrors('categories')}" th:errors="*{categories}"  class="alert alert-danger col-4 "></div>
             </div>
         </div>
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Price</label>
             <div class="col-sm-10">
                 <input type="text" th:field="*{price}" placeholder="Enter price" class="form-control col-4 mb-4">
+                <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}"  class="alert alert-danger col-4 "></div>
             </div>
         </div>
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Quantity</label>
             <div class="col-sm-10">
                 <input type="text" th:field="*{quantity}" placeholder="Enter quantity" class="form-control col-4 mb-4">
+                <div th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"  class="alert alert-danger col-4 "></div>
             </div>
         </div>
         <input type="hidden" th:field="*{id}">
+        <a class="btn btn-secondary ml-2" th:href="@{/showProducts}">Back</a>
         <button class="btn btn-primary ml-2" type="submit">Save</button>
     </form>
     <hr/>
-    <a class="btn btn-secondary ml-2" th:href="@{/showProducts}">Back</a>
+
 </div>
 </body>
 </html>

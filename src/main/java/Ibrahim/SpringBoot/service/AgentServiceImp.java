@@ -2,7 +2,6 @@ package Ibrahim.SpringBoot.service;
 
 import Ibrahim.SpringBoot.model.Agent;
 import Ibrahim.SpringBoot.repository.AgentRepository;
-import Ibrahim.SpringBoot.repository.RolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

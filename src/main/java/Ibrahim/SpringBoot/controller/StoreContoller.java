@@ -8,7 +8,9 @@ import Ibrahim.SpringBoot.service.StoreServiceImp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +29,11 @@ public class StoreContoller {
 
 
     @PostMapping("/saveStore")
-    public String saveProduct(@Valid @ModelAttribute Store newS, Errors errors, @ModelAttribute Agent newA) {
-        if (errors.hasErrors()) {
+    public String saveProduct(@Valid @ModelAttribute Store newS, Errors errors, @ModelAttribute Agent newA, BindingResult bindingResult) {
+        if (storeServiceImp.numberExist(newS.getStoreNumber())) {
+            bindingResult.addError(new FieldError("store", "storeNumber", "Number already in use !!"));
+        }
+        if (errors.hasErrors()||bindingResult.hasErrors()) {
             log.error("form error :" + errors.toString());
             return "store-Registration-Form.html";
         }

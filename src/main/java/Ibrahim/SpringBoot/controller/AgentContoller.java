@@ -1,11 +1,10 @@
 package Ibrahim.SpringBoot.controller;
 
 import Ibrahim.SpringBoot.model.Agent;
-import Ibrahim.SpringBoot.model.Product;
 import Ibrahim.SpringBoot.model.Store;
 import Ibrahim.SpringBoot.repository.AgentRepository;
 import Ibrahim.SpringBoot.service.AgentServiceImp;
-import Ibrahim.SpringBoot.service.RolesServiceImp;
+import Ibrahim.SpringBoot.service.RoleServiceImp;
 import Ibrahim.SpringBoot.service.StoreServiceImp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class AgentContoller {
     @Autowired
     private StoreServiceImp storeServiceImp;
     @Autowired
-    private RolesServiceImp rolesServiceImp;
+    private RoleServiceImp roleServiceImp;
 
 
     @PostMapping("/saveAgent")
@@ -45,7 +44,7 @@ public class AgentContoller {
 
     @PostMapping("/finalizeRegistration")
     public String finalizeRegistration(@Valid @ModelAttribute Agent newA, Errors errors, Model model, BindingResult bindingResult) {
-        model.addAttribute("roles", rolesServiceImp.getRoles());
+        model.addAttribute("roles", roleServiceImp.getRoles());
         if (agentServiceImp.agentExist(newA.getEmail())) {
             bindingResult.addError(new FieldError("newA", "email", "Email already exist"));
         }
