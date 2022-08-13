@@ -136,7 +136,7 @@ public class BillController {
         ModelAndView mav = new ModelAndView("showBills");
 
         Store store = sServ.getStoreById(agent.getStore().getId());
-        if (agent.getRoles().getRoleId() == 2) {
+        if (agent.getRole().getRoleId() == 2) {
             mav.addObject("bills", bRep.getbillsByAgent(agent.getId()));
         } else {
             mav.addObject("bills", bRep.getBillsByStore(agent.getStore().getId()));

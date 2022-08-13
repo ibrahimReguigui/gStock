@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface AgentRepository extends JpaRepository<Agent, Integer> {
     Agent readByEmail(String email);
 
-    @Query("select a from Agent a where a.store.id=?1 and a.roles.roleId<>3")
+    @Query("select a from Agent a where a.store.id=?1 and a.role.roleId<>3")
     List<Agent> getAgentsByStore(Long id);
 
     Optional<Agent> findAgentByEmail(String email);

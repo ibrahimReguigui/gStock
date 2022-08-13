@@ -26,7 +26,7 @@ public class PdfService {
     public void createPdf(Integer billId) {
         Bill bill = billServiceImp.getBillById(billId);
         List<Product> billProducts = billServiceImp.getBillProducts(bill.getId());
-        String filePdf = "C:\\Users\\Asus\\Desktop\\SpringBoot\\src\\main\\resources\\pdfFiles\\" + bill.getClient() + "-" + bill.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss")) + ".pdf";
+        String filePdf = System.getProperty("user.dir")+"\\src\\main\\resources\\pdfFiles\\" + bill.getClient() + "-" + bill.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss")) + ".pdf";
         try {
             PdfWriter writer = new PdfWriter(filePdf);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -61,7 +61,7 @@ public class PdfService {
 
             try {
                 // Create an ImageData object
-                String imageFile = "C:\\Users\\Asus\\Desktop\\images.png";
+                String imageFile = System.getProperty("user.dir")+"\\src\\main\\resources\\static\\Images\\images.png";
                 ImageData data = ImageDataFactory.create(imageFile);
                 // Creating an Image object
                 Image image = new Image(data);

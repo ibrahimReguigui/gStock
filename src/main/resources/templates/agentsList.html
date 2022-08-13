@@ -15,7 +15,7 @@
     <section>
         <div th:replace="header :: header"></div>
         <hr/>
-        <h2>list products</h2>
+        <h2>Agents List</h2>
         <hr/>
         <table class="table table-bordered table-stiped" id="product-table">
             <thead>
@@ -31,10 +31,10 @@
             <tbody>
             <tr th:each="agent:${agents}">
                 <td th:text="${agent.name}"></td>
-                <td th:text="${agent.roles.roleName}"></td>
+                <td th:text="${agent.role.roleName}"></td>
                 <td th:text="${agent.email}"></td>
                 <td th:text="${agent.mobileNumber}"></td>
-                <td th:text="${agent.status}"></td>
+                <td th:text="${agent.status.status}"></td>
                 <td >
                     <a  th:href="@{/updateAgentForm(agentId=${agent.id})}"class="btn btn-info">Update</a>
                     <a th:href="@{/deleteAgent(agentId=${agent.id})}" class="btn btn-danger ml-2 ">Delete</a>

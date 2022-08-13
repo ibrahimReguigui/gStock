@@ -1,6 +1,7 @@
 package Ibrahim.SpringBoot.security;
 
 import Ibrahim.SpringBoot.model.Agent;
+import Ibrahim.SpringBoot.model.AgentStatus;
 import Ibrahim.SpringBoot.model.Role;
 import Ibrahim.SpringBoot.repository.AgentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,18 @@ public class UsernamePwdAuthenticationProvider implements AuthenticationProvider
         Agent agent = aRepo.readByEmail(email);
         if (null != agent && agent.getId() > 0 &&
                 passwordEncoder.matches(pwd, agent.getPwd()) &&
-                agent.getStatus().equals("Accepted")){
+                agent.getStatus().equals(AgentStatus.CONFIRMED)) {
             return new UsernamePasswordAuthenticationToken(
-                    email, null, getGrantedAuthorities(agent.getRoles()));
+                    email, null, getGrantedAuthorities(agent.getRole()));
+        } else if (null != agent && agent.getId() > 0 &&
+                passwordEncoder.matches(pwd, agent.getPwd()) &&
+                agent.getStatus().equals(AgentStatus.AWAITING_CONFIRMATION)) {
+            throw new BadCredentialsException("Account not activated yet !");
+        } else if (null != agent && agent.getId() > 0 &&
+                !passwordEncoder.matches(pwd, agent.getPwd())) {
+            throw new BadCredentialsException("Invalid password !");
         } else {
-            throw new BadCredentialsException("Invalid credentials!");
+            throw new BadCredentialsException("Invalid Email !");
         }
     }
 

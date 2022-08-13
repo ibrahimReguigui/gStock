@@ -2,6 +2,7 @@ package Ibrahim.SpringBoot.controller;
 
 
 import Ibrahim.SpringBoot.model.Agent;
+import Ibrahim.SpringBoot.model.AgentStatus;
 import Ibrahim.SpringBoot.model.Store;
 import Ibrahim.SpringBoot.service.AgentServiceImp;
 import Ibrahim.SpringBoot.service.StoreServiceImp;
@@ -40,7 +41,7 @@ public class StoreContoller {
         storeServiceImp.saveStore(newS);
         Store store = storeServiceImp.getStoreByStoreNumber(newS.getStoreNumber());
         newA.setStore(store);
-        newA.setStatus("Accepted");
+        newA.setStatus(AgentStatus.CONFIRMED);
         agentServiceImp.saveAgent(newA);
         return "redirect:/login?register=true";
     }

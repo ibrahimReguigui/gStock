@@ -1,6 +1,8 @@
 package Ibrahim.SpringBoot.controller;
 
 import Ibrahim.SpringBoot.model.Agent;
+import Ibrahim.SpringBoot.model.AgentStatus;
+import Ibrahim.SpringBoot.model.Role;
 import Ibrahim.SpringBoot.model.Store;
 import Ibrahim.SpringBoot.repository.AgentRepository;
 import Ibrahim.SpringBoot.service.AgentServiceImp;
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -51,7 +54,7 @@ public class AgentContoller {
         if (bindingResult.hasErrors()) {
             return "register-agent.html";
         }
-        if (newA.getRoles().getRoleId() == 3) {
+        if (newA.getRole().getRoleId() == 3) {
             model.addAttribute("agent", newA);
             model.addAttribute("store", new Store());
             return "store-Registration-Form.html";
@@ -79,12 +82,17 @@ public class AgentContoller {
     public ModelAndView updateAgent(@RequestParam Integer agentId) {
         ModelAndView mav = new ModelAndView("updateAgent");
         mav.addObject("agent", agentServiceImp.getAgentById(agentId));
+        List<Role> roles=roleServiceImp.getRoles();
+        roles.remove(2);
+        mav.addObject("roles", roles);
+        mav.addObject("allStatus", AgentStatus.values());
         return mav;
     }
 
     @PostMapping("updateAgent")
     public String updateAgent(@ModelAttribute Agent newA) {
         Agent agent = agentServiceImp.getAgentById(newA.getId());
+        agent.setRole(newA.getRole());
         agent.setStatus(newA.getStatus());
         agentServiceImp.updateAgent(agent);
         return "redirect:/agentsList";

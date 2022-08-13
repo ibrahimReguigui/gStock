@@ -36,7 +36,7 @@ public class LoginController {
                                    Model model) {
         String errorMessge = null;
         if (error != null) {
-            errorMessge = "Username or Password is incorrect !!";
+            errorMessge = error;
         }
         if (logout != null) {
             errorMessge = "You have been successfully logged out !!";
@@ -70,7 +70,7 @@ public class LoginController {
         Agent agent = agentServiceImp.readByEmail(authentication.getName());
         session.setAttribute("LoggedInAgent", agent);
         mav.addObject("username", agent.getName());
-        mav.addObject("role", agent.getRoles().getRoleName());
+        mav.addObject("role", agent.getRole().getRoleName());
         return mav;
     }
 
