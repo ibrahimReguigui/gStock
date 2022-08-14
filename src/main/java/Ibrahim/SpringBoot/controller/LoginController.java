@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,16 +34,18 @@ public class LoginController {
     public String displayLoginPage(@RequestParam(value = "error", required = false) String error,
                                    @RequestParam(value = "logout", required = false) String logout,
                                    @RequestParam(value = "register", required = false) String register,
-                                   Model model) {
+                                   Model model, RedirectAttributes redirAttrs) {
         String errorMessge = null;
         if (error != null) {
             errorMessge = error;
         }
         if (logout != null) {
-            errorMessge = "You have been successfully logged out !!";
+            redirAttrs.addFlashAttribute("success", "You have been successfully logged out !!");
+            return "redirect:/login";
         }
         if (register != null) {
-            errorMessge = "Registration successful !!";
+            redirAttrs.addFlashAttribute("success", "Registration successful !!");
+            return "redirect:/login";
         }
         model.addAttribute("errorMessge", errorMessge);
         return "login.html";

@@ -3,49 +3,65 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
-  <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.12.1/datatables.min.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-<header  >
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-    <div class="collapse navbar-collapse"  >
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item" sec:authorize="isAnonymous()">
-                <a  th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"
-                    th:href="@{/login}" class="nav-link">LogIn</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a  th:classappend="${#httpServletRequest.getRequestURI() == '/home' ? 'active':''}"
-                    th:href="@{/home}" class="nav-link">Home</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a  th:classappend="${#httpServletRequest.getRequestURI() == '/showProducts' ? 'active':''}"
-                    th:href="@{/showProducts}" class="nav-link">Products</a>
-            </li>
-            <li class="nav-item" sec:authorize ="hasRole('ROLE_OWNER')">
-                <a  th:classappend="${#httpServletRequest.getRequestURI() == '/agentsList' ? 'active':''}"
-                    th:href="@{/agentsList}" class="nav-link">Agents List</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a  th:classappend="${#httpServletRequest.getRequestURI() == '/showBills' ? 'active':''}"
-                    th:href="@{/showBills}" class="nav-link">Bills List</a>
-            </li>
-            <li class="nav-item" sec:authorize="hasRole('ROLE_VENDOR')">
-                <a  th:classappend="${#httpServletRequest.getRequestURI() == '/newBill' ? 'active':''}"
-                    th:href="@{/billForm}" class="nav-link">New Bill</a>
-            </li>
-            <li class="nav-item"  sec:authorize="isAuthenticated()">
-                <a  th:classappend="${#httpServletRequest.getRequestURI() == '/logout' ? 'active':''}"
-                    th:href="@{/logout}" class="nav-link">Logout</a>
-            </li>
-        </ul>
+        <a th:href="@{/home}" class="logo d-flex align-items-center">
+            <!-- Uncomment the line below if you also wish to use an image logo -->
+            <!-- <img src="assets/img/logo.png" alt=""> -->
+            <h1>GStock</h1>
+        </a>
+
+        <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
+        <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
+        <nav id="navbar" class="navbar">
+            <ul>
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"
+                       th:href="@{/login}" class="nav-link">LogIn</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a th:classappend="${#httpServletRequest.getRequestURI() == '/home' ? 'active':''}"
+                       th:href="@{/home}" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_OWNER')">
+                    <a th:classappend="${#httpServletRequest.getRequestURI() == '/agentsList' ? 'active':''}"
+                       th:href="@{/agentsList}" class="nav-link">Agents List</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a th:classappend="${#httpServletRequest.getRequestURI() == '/showBills' ? 'active':''}"
+                       th:href="@{/showBills}" class="nav-link">Bills</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_VENDOR')">
+                    <a th:classappend="${#httpServletRequest.getRequestURI() == '/newBill' ? 'active':''}"
+                       th:href="@{/billForm}" class="nav-link">New Bill</a>
+                </li>
+                <li sec:authorize="isAuthenticated()" class="dropdown"><a
+                        th:classappend="${#httpServletRequest.getRequestURI() == '/showProducts' ? 'active':''}"
+                        th:href="@{/showProducts}"><span>Products</span> <i
+                        class="bi bi-chevron-down dropdown-indicator"></i></a>
+                    <ul>
+                        <li><a th:href="@{/showProducts}">Show List</a></li>
+                        <li><a th:href="@{/addProductForm}">Add</a></li>
+                    </ul>
+                </li>
+                <li sec:authorize="isAuthenticated()">
+                    <a class="get-a-quote"
+                       th:classappend="${#httpServletRequest.getRequestURI() == '/logout' ? 'active':''}"
+                       th:href="@{/logout}">Logout</a>
+                </li>
+            </ul>
+        </nav><!-- .navbar -->
+
     </div>
 
-</nav>
+
 </header>
 </body>
 </html>
