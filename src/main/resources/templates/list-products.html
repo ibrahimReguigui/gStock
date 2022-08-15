@@ -100,7 +100,7 @@
                                         <td th:text="${product.categories}"></td>
                                         <td th:text="${product.quantity}"></td>
                                         <td th:text="${product.price}"></td>
-                                        <td style="text-align: center;" sec:authorize="hasRole('ROLE_MANAGER')">
+                                        <td style="display: flex;gap: 20px;" sec:authorize="hasRole('ROLE_MANAGER')">
                                             <a th:href="@{/updateForm(productId=${product.id})}" class="btn btn-info">Update</a>
                                             <a th:href="@{/deleteProduct(productId=${product.id})}" class="btn btn-danger ">Delete</a>
                                         </td>

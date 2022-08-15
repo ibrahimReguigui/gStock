@@ -51,58 +51,100 @@
 
 <main id="page-top">
 
-        <!-- ======= Breadcrumbs ======= -->
-        <div class="breadcrumbs">
-            <div class="page-header d-flex align-items-center"
-                 style="background-image: url('assets/img/page-header.jpg');">
-                <div class="container position-relative">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-lg-6 text-center">
-                            <h2>Products</h2>
-                            <p>Add , Update and Delete Products from your Inventory.</p>
-                        </div>
+    <!-- ======= Breadcrumbs ======= -->
+    <div class="breadcrumbs">
+        <div class="page-header d-flex align-items-center"
+             style="background-image: url('assets/img/page-header.jpg');">
+            <div class="container position-relative">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-6 text-center">
+                        <h2>Products</h2>
+                        <p>Add , Update and Delete Products from your Inventory.</p>
                     </div>
                 </div>
             </div>
-            <nav>
-                <div class="container">
-                    <ol>
-                        <li><a th:href="@{/showProducts}">Products</a></li>
-                        <li>Add</li>
-                    </ol>
-                </div>
-            </nav>
-        </div><!-- End Breadcrumbs -->
-
-        <div id="wrapper">
-            <div id="content-wrapper" class="d-flex flex-column">
-
-                <!-- Main Content -->
-                <div class="row gy-4 mt-4">
-                    <div class="col-lg-8">
-                        <form action="forms/contact.php" method="post" role="form" class="php-email-form">
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <input type="text" name="name" class="form-control" id="name"
-                                           placeholder="Your Name" required>
-                                </div>
-                                <div class="col-md-6 form-group mt-3 mt-md-0">
-                                    <input type="email" class="form-control" name="email" id="email"
-                                           placeholder="Your Email" required>
-                                </div>
-                            </div>
-                            <div class="form-group mt-3">
-                                <input type="text" class="form-control" name="subject" id="subject"
-                                       placeholder="Subject" required>
-                            </div>
-                            <div class="text-center">
-                                <button type="submit">Send Message</button>
-                            </div>
-                        </form>
-                    </div><!-- End Contact Form -->
-                </div>
-            </div>
         </div>
+        <nav>
+            <div class="container">
+                <ol>
+                    <li><a th:href="@{/showProducts}">Products</a></li>
+                    <li>Add</li>
+                </ol>
+            </div>
+        </nav>
+    </div><!-- End Breadcrumbs -->
+
+    <section id="contact" class="contact">
+        <div class="container" data-aos="fade-up">
+
+
+            <div class="col-lg-8 ">
+                <form th:action="@{/saveProduct}" th:object="${product}" method="post" role="form"
+                       style="width: 100%;background: #fff;">
+                    <div class="row">
+                        <h4 class="col-sm-2 col-form-label ">Reference</h4>
+                        <div class="col-md-6 form-group">
+                            <input type="text" name="name" th:field="*{reference}" class="form-control col-4 mb-4"
+                                   placeholder="Product reference">
+                            <div th:if="${#fields.hasErrors('reference')}" th:errors="*{reference}"
+                                 class="alert alert-danger "></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h4 class="col-sm-2 col-form-label ">Name</h4>
+                        <div class="col-md-6 form-group">
+                            <input type="text" name="name" th:field="*{name}" class="form-control col-4 mb-4"
+                                   placeholder="Product Name">
+                            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                                 class="alert alert-danger  "></div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <h4 class="col-sm-2 col-form-label ">Categorie</h4>
+                        <div class="col-md-6 form-group">
+                            <input type="text" name="name" th:field="*{categories}" class="form-control col-4 mb-4"
+                                   placeholder="Product Name">
+                            <div th:if="${#fields.hasErrors('categories')}" th:errors="*{categories}"
+                                 class="alert alert-danger  "></div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <h4 class="col-sm-2 col-form-label ">Price</h4>
+                        <div class="col-md-6 form-group">
+                            <input type="text" name="name" th:field="*{price}" class="form-control col-4 mb-4"
+                                   placeholder="Product price">
+                            <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}"
+                                 class="alert alert-danger  "></div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <h4 class="col-sm-2 col-form-label ">Quantity</h4>
+                        <div class="col-md-6 form-group">
+                            <input type="text" name="name" th:field="*{quantity}" class="form-control col-4 mb-4"
+                                   placeholder="Product Quantity">
+                            <div th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"
+                                 class="alert alert-danger  "></div>
+                        </div>
+
+                    </div>
+                    <input type="hidden" th:field="*{id}">
+                    <div style="display: flex;gap: 350px;">
+                        <a class="btn btn-secondary ml-2"
+                           th:href="@{/showProducts}">Back</a>
+                        <div class="text-center">
+                            <button class="btn btn-primary ml-2" type="submit">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div><!-- End Contact Form -->
+
+        </div>
+
+        </div>
+    </section>
 
     </div>
 

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>list products</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.12.1/datatables.min.css"/>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+</head>
+<body>
+<div class="container">
+    <section>
+        <div th:replace="header :: header"></div>
+        <hr/>
+        <h2>Bills list</h2>
+        <div class="title-main text-center mx-auto mb-md-5 mb-4" style="max-width:500px;">
+        </div>
+        <hr/>
+        <table class="table table-bordered table-stiped" id="product-table">
+            <thead>
+            <tr>
+                <th>Client Name</th>
+                <th>Status</th>
+                <th>Created at</th>
+                <th sec:authorize="hasRole('ROLE_MANAGER')">Created by</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="bill:${bills}">
+                <td th:text="${bill.getClient()}"></td>
+                <td th:text="${bill.getStatus()}"></td>
+                <td th:text="${#temporals.format(bill.createdAt, 'yyyy-MM-dd   hh:mm:ss ')}"></td>
+                <td sec:authorize="hasRole('ROLE_MANAGER')" th:text="${bill.createdBy}"></td>
+                <td th:text="${bill.getTotal()}"></td>
+                <td >
+                    <a sec:authorize="hasRole('ROLE_MANAGER')" th:href="@{/deleteBill(billId=${bill.id})}" class="btn btn-danger">Cancel</a>
+                    <a th:href="@{/billDetails(billId=${bill.id})}" class="btn btn-info">Details</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr/>
+    </section>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.12.1/datatables.min.js"></script>
+<script>
+    $(document).ready(function (){
+        $("#product-table").DataTable(
+            {'aoColumnDefs':[{'bSortable': false,'aTargets':[-1]}]}
+        );
+    })
+</script>
+
+
+
+
+</body>
+</html>

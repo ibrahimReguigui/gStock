@@ -30,19 +30,31 @@
                     <a th:classappend="${#httpServletRequest.getRequestURI() == '/home' ? 'active':''}"
                        th:href="@{/home}" class="nav-link">Home</a>
                 </li>
+
                 <li class="nav-item" sec:authorize="hasRole('ROLE_OWNER')">
                     <a th:classappend="${#httpServletRequest.getRequestURI() == '/agentsList' ? 'active':''}"
                        th:href="@{/agentsList}" class="nav-link">Agents List</a>
                 </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
+                <!--                -->
+                <li class="nav-item" sec:authorize="hasRole('ROLE_VENDOR')">
+                    <a th:classappend="${#httpServletRequest.getRequestURI() == '/showProducts' ? 'active':''}"
+                       th:href="@{/showProducts}" class="nav-link">Products</a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_VENDOR')" class="dropdown"><a
+                        th:classappend="${#httpServletRequest.getRequestURI() == '/showBills' ? 'active':''}"
+                        th:href="@{/showBills}"><span>Bills</span> <i
+                        class="bi bi-chevron-down dropdown-indicator"></i></a>
+                    <ul>
+                        <li><a th:href="@{/showBills}">Show List</a></li>
+                        <li><a th:href="@{/billForm}">New</a></li>
+                    </ul>
+                </li>
+                <!--                -->
+                <li class="nav-item" sec:authorize="hasRole('ROLE_MANAGER')">
                     <a th:classappend="${#httpServletRequest.getRequestURI() == '/showBills' ? 'active':''}"
                        th:href="@{/showBills}" class="nav-link">Bills</a>
                 </li>
-                <li class="nav-item" sec:authorize="hasRole('ROLE_VENDOR')">
-                    <a th:classappend="${#httpServletRequest.getRequestURI() == '/newBill' ? 'active':''}"
-                       th:href="@{/billForm}" class="nav-link">New Bill</a>
-                </li>
-                <li sec:authorize="isAuthenticated()" class="dropdown"><a
+                <li sec:authorize="hasRole('ROLE_MANAGER')" class="dropdown"><a
                         th:classappend="${#httpServletRequest.getRequestURI() == '/showProducts' ? 'active':''}"
                         th:href="@{/showProducts}"><span>Products</span> <i
                         class="bi bi-chevron-down dropdown-indicator"></i></a>
@@ -51,6 +63,7 @@
                         <li><a th:href="@{/addProductForm}">Add</a></li>
                     </ul>
                 </li>
+                <!--                -->
                 <li sec:authorize="isAuthenticated()">
                     <a class="get-a-quote"
                        th:classappend="${#httpServletRequest.getRequestURI() == '/logout' ? 'active':''}"

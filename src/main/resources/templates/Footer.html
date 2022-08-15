@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -26,7 +27,15 @@
                 <h4>Useful Links</h4>
                 <ul>
                     <li><a th:href="@{/home}">Home</a></li>
-                    <li><a th:href="@{/showProducts}">Products</a></li>
+                    <li sec:authorize="isAuthenticated()"><a th:href="@{/showProducts}">Products</a></li>
+                    <li sec:authorize="isAnonymous()">
+                        <a
+                           th:href="@{/login}" >LogIn</a>
+                    </li>
+                    <li sec:authorize="isAnonymous()">
+                        <a
+                                th:href="@{/register}" >Register</a>
+                    </li>
                 </ul>
             </div>
             <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">

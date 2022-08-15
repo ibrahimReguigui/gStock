@@ -23,6 +23,7 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().ignoringAntMatchers("/register")
                 .and().authorizeRequests()
+                .mvcMatchers("/home").permitAll()
                 .mvcMatchers("/login").permitAll()
                 .mvcMatchers("/register").permitAll()
                 .and().formLogin().loginPage("/login")
@@ -33,7 +34,7 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
                         response.sendRedirect("/login?error=" + exception.getMessage());
                     }
                 })
-                .and().logout().logoutSuccessUrl("/login?logout=true").invalidateHttpSession(true).permitAll()
+                .and().logout().logoutSuccessUrl("/home").invalidateHttpSession(true).permitAll()
                 .and().httpBasic();
     }
 

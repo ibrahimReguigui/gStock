@@ -51,22 +51,17 @@ public class BillController {
     }
 
     @PostMapping("/createBill")
-    public String createBill(@Valid @ModelAttribute Bill newB, Errors errors, HttpSession session) {
+    public String createBill(@Valid @ModelAttribute Bill bill, Errors errors, HttpSession session) {
         if (errors.hasErrors()) {
-            /*ModelAndView mav = new ModelAndView("newBill");*/
             log.error("form error :" + errors.toString());
-            return "redirect:/billForm";
+            return "newBill.html";
         }
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
-        newB.setAgent(agent);
-        newB.setStatus("Instance");
-        newB.setStore(agent.getStore());
-        bServ.saveBill(newB);
-        session.setAttribute("bill", newB);
-
-
-       /* ModelAndView mav = new ModelAndView("addProductToBillForm");
-        mav.addObject("bill",newB);*/
+        bill.setAgent(agent);
+        bill.setStatus("Instance");
+        bill.setStore(agent.getStore());
+        bServ.saveBill(bill);
+        session.setAttribute("bill", bill);
         return "redirect:/addProductToBillForm";
     }
 

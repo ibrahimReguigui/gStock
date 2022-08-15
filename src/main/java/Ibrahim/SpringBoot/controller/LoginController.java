@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 
 @Slf4j
 @Controller
@@ -57,7 +58,7 @@ public class LoginController {
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return "redirect:/login?logout=true";
+        return "redirect:/home";
     }
 
     @GetMapping("/register")
@@ -68,12 +69,13 @@ public class LoginController {
     }
 
     @GetMapping("/home")
-    public ModelAndView homePage(Authentication authentication, HttpSession session) {
+    public ModelAndView homePage(Authentication authentication, HttpSession session, Principal principal) {
         ModelAndView mav = new ModelAndView("homePage");
+        if(principal==null){
+            return mav;
+        }
         Agent agent = agentServiceImp.readByEmail(authentication.getName());
         session.setAttribute("LoggedInAgent", agent);
-        mav.addObject("username", agent.getName());
-        mav.addObject("role", agent.getRole().getRoleName());
         return mav;
     }
 

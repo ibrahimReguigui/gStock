@@ -59,7 +59,6 @@ public class ProductContoller {
         return "add-product-form.html";
     }
 
-
     @PostMapping("/saveProduct")
     public String saveProduct(@Valid @ModelAttribute Product newP, Errors errors, HttpSession session) {
         if (errors.hasErrors()) {

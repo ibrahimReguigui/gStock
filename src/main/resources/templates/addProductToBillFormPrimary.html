@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>list products</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.12.1/datatables.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <section>
+        <div th:replace="header :: header"></div>
+        <hr/>
+        <div class="title-main text-center mx-auto mb-md-5 mb-4" style="max-width:500px;">
+            <p class="title-style" th:text="${#temporals.format(bill.createdAt, 'yyyy-MM-dd  | hh:mm:ss ')}"></p>
+            <h3 class="title-style" th:text="${bill.getClient()}"></h3>
+            <h3 class="title-style" th:text="${'Total : ' + bill.total}"></h3>
+        </div>
+        <hr/>
+        <h3>Bill Products</h3>
+        <hr/>
+        <table class="table table-bordered table-stiped" id="bill-table">
+            <thead>
+            <tr>
+                <th>Reference</th>
+                <th>Name</th>
+                <th>Categorie</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th >Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="pb:${billProducts}">
+                <td th:text="${pb.reference}"></td>
+                <td th:text="${pb.name}"></td>
+                <td th:text="${pb.categories}"></td>
+                <td th:text="${pb.quantity}"></td>
+                <td th:text="${pb.price}"></td>
+                <td >
+                    <a th:href="@{/removeProduct(productId=${pb.id})}" class="btn btn-danger ml-2 ">Remove</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <a class="btn btn-secondary ml-2" th:href="@{/cancelBill(billId=${bill.id})}">Cancel</a>
+        <a th:href="@{/confirmBill(billId=${bill.id})}" class="btn btn-primary ml-2" >Confirm</a>
+        <hr/>
+        <h3>List Products</h3>
+        <table class="table table-bordered table-stiped" id="product-table">
+            <thead>
+            <tr>
+                <th>Reference</th>
+                <th>Name</th>
+                <th>Categorie</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th >Reserver</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product:${products}">
+                <td th:text="${product.reference}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.categories}"></td>
+                <td th:text="${product.quantity}"></td>
+                <td th:text="${product.price}"></td>
+                <td >
+                    <a th:href="@{/addProductToBill(productId=${product.id})}" class="btn btn-info" >All</a>
+                    <a th:href="@{/splitProductForm(productId=${product.id})}" class="btn btn-info">Part</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr/>
+    </section>
+</div>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.12.1/datatables.min.js"></script>
+<script>
+    $(document).ready(function (){
+        $("#product-table").DataTable(
+            {'aoColumnDefs':[{'bSortable': false,'aTargets':[-1]}]}
+        );
+    })
+</script>-->
+</body>
+</html>
