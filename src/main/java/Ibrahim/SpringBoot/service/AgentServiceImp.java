@@ -60,4 +60,15 @@ public class AgentServiceImp implements AgentService {
         return findAgentByEmail(email).isPresent();
     }
 
+    public Integer getNumberOfAgentByStore(Long id) {
+        return agentRepository.getNumberOfAgentByStore(id);
+    }
+
+    ;
+    public Integer getAwaitingConfirmationAgents(Long id) {
+        return agentRepository.getAwaitingConfirmationAgents(id);
+    }
+
+    ;
+
 }

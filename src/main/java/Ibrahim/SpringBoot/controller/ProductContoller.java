@@ -30,7 +30,7 @@ import java.util.List;
 public class ProductContoller {
 
     @Autowired
-    private ProductServiceImp pServ;
+    private ProductServiceImp productServiceImp;
 
     @Autowired
     private AgentRepository aRepo;
@@ -46,6 +46,10 @@ public class ProductContoller {
         ModelAndView mav = new ModelAndView("list-products");
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
         mav.addObject("products", pRepo.getAllStoreProduct(agent.getStore().getId()));
+        mav.addObject("numberProduct",productServiceImp.getNumberOfProductinStore(agent.getStore().getId()));
+        mav.addObject("quantityProduct",productServiceImp.getTotalQuantityByStore(agent.getStore().getId()));
+        mav.addObject("numberCategories",productServiceImp.getNumberOfCategorieByStore(agent.getStore().getId()));
+        mav.addObject("totalPrice",productServiceImp.getTotalPriceInStore(agent.getStore().getId()));
         return mav;
     }
 
@@ -67,34 +71,34 @@ public class ProductContoller {
         }
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
         newP.setStore(agent.getStore());
-        pServ.saveProduct(newP);
+        productServiceImp.saveProduct(newP);
         return "redirect:/showProducts";
     }
 
     @GetMapping("/updateForm")
     public ModelAndView updateForm(@RequestParam Integer productId) {
         ModelAndView mav = new ModelAndView("add-product-form");
-        mav.addObject("product", pServ.getProductById(productId));
+        mav.addObject("product", productServiceImp.getProductById(productId));
         return mav;
     }
 
     @GetMapping("/deleteProduct")
     public String deleteProduct(@RequestParam Integer productId) {
-        pServ.deleteProduct(productId);
+        productServiceImp.deleteProduct(productId);
         return "redirect:/showProducts";
     }
 
     @GetMapping("/splitProductForm")
     public ModelAndView splitProductForm(@RequestParam Integer productId) {
         ModelAndView mav = new ModelAndView("splitProductForm");
-        mav.addObject("product", pServ.getProductById(productId));
+        mav.addObject("product", productServiceImp.getProductById(productId));
         return mav;
     }
 
     @PostMapping("/splitProduct")
     public String splitProduct(@ModelAttribute Product product, HttpSession session, BindingResult bindingResult) {
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
-        Product ancientP = pServ.getProductById(product.getId());
+        Product ancientP = productServiceImp.getProductById(product.getId());
         if (ancientP.getQuantity() < product.getQuantity()) {
             bindingResult.addError(new FieldError("product", "quantity", "Sorry insufficient quality in stock "));
             return "splitProductForm";
@@ -115,16 +119,16 @@ public class ProductContoller {
         Bill bill = (Bill) session.getAttribute("bill");
         Bill bill2=billServiceImp.getBillById(bill.getId());
         newP.setBill(bill2);
-        pServ.saveProduct(newP);
+        productServiceImp.saveProduct(newP);
 
 
         ancientP.setQuantity(ancientP.getQuantity() - newP.getQuantity());
         bill2.setTotal(bill2.getTotal() + newP.getQuantity() * newP.getPrice());
         billServiceImp.saveBill(bill2);
         if (ancientP.getQuantity() == 0) {
-            pServ.deleteProduct(ancientP.getId());
+            productServiceImp.deleteProduct(ancientP.getId());
         } else {
-            pServ.saveProduct(ancientP);
+            productServiceImp.saveProduct(ancientP);
         }
         return "redirect:/addProductToBillForm";
     }

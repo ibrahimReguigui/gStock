@@ -13,5 +13,11 @@ public interface ProductService {
 
     public void saveProduct(Product newP);
 
+    public Integer getTotalQuantityByStore(Long id );
+    public Integer getNumberOfCategorieByStore(Long id );
+
+    public float getTotalPriceInStore(Long id);
+    public Integer getNumberOfProductinStore(Long id );
+
 
 }

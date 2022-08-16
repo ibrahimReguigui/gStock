@@ -14,5 +14,9 @@ public interface BillService {
 
     public void saveBill(Bill newB);
     public List<Product> getBillProducts(Integer id);
+    public Integer getbillsNumberByStore(Long id);
+    float getBillsTotal(Long id);
+    float getAvgBills(Long id);
+    float getMaxTotalBill(Long id);
 
 }

@@ -36,4 +36,18 @@ public class BillServiceImp implements BillService {
     public List<Product> getBillProducts(Integer id){
         return billRepository.getBillProducts(id);
     }
+
+    public Integer getbillsNumberByStore(Long id){
+        return billRepository.getbillsNumberByStore(id);
+    };
+
+    public float getBillsTotal(Long id){
+        return billRepository.getBillsTotal(id);
+    };
+    public float getAvgBills(Long id){
+        return billRepository.getAvgBills(id);
+    };
+    public float getMaxTotalBill(Long id){
+        return billRepository.getMaxTotalBill(id);
+    };
 }

@@ -68,6 +68,8 @@ public class AgentContoller {
     public String agentsList(HttpSession session, Model model) {
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
         model.addAttribute("agents", agentRepository.getAgentsByStore(agent.getStore().getId()));
+        model.addAttribute("numberOfAgents", agentRepository.getNumberOfAgentByStore(agent.getStore().getId()));
+        model.addAttribute("awaitingAgents", agentRepository.getAwaitingConfirmationAgents(agent.getStore().getId()));
         return "agentsList.html";
     }
 

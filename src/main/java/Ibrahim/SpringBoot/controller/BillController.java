@@ -31,15 +31,15 @@ import java.util.List;
 public class BillController {
 
     @Autowired
-    private BillServiceImp bServ;
+    private BillServiceImp billServiceImp;
     @Autowired
-    private ProductServiceImp pServ;
+    private ProductServiceImp productServiceImp;
     @Autowired
     private BillRepository bRep;
     @Autowired
     private ProductRepository pRepo;
     @Autowired
-    private StoreServiceImp sServ;
+    private StoreServiceImp storeServiceImp;
 
     @GetMapping("/billForm")
     public ModelAndView newBill(HttpSession session) {
@@ -60,7 +60,7 @@ public class BillController {
         bill.setAgent(agent);
         bill.setStatus("Instance");
         bill.setStore(agent.getStore());
-        bServ.saveBill(bill);
+        billServiceImp.saveBill(bill);
         session.setAttribute("bill", bill);
         return "redirect:/addProductToBillForm";
     }
@@ -69,7 +69,7 @@ public class BillController {
     public String addProductToBillForm(HttpSession session, Model model) {
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
         Bill sbill = (Bill) session.getAttribute("bill");
-        Bill bill = bServ.getBillById(sbill.getId());
+        Bill bill = billServiceImp.getBillById(sbill.getId());
         model.addAttribute("bill", bill);
         model.addAttribute("products", pRepo.getAllStoreProduct(agent.getStore().getId()));
         model.addAttribute("username", agent.getName());
@@ -79,13 +79,13 @@ public class BillController {
 
     @GetMapping("/addProductToBill")
     public String addProductToBill(@RequestParam Integer productId, HttpSession session) {
-        Product product = pServ.getProductById(productId);
+        Product product = productServiceImp.getProductById(productId);
         Bill sbill = (Bill) session.getAttribute("bill");
-        Bill bill = bServ.getBillById(sbill.getId());
+        Bill bill = billServiceImp.getBillById(sbill.getId());
         product.setBill(bill);
-        pServ.saveProduct(product);
+        productServiceImp.saveProduct(product);
         bill.setTotal(bill.getTotal() + product.getQuantity() * product.getPrice());
-        bServ.saveBill(bill);
+        billServiceImp.saveBill(bill);
         return "redirect:/addProductToBillForm";
     }
 
@@ -96,31 +96,31 @@ public class BillController {
             Product pRef = pRepo.findByReference(p.getReference());
             if (pRef != null) {
                 pRef.setQuantity(pRef.getQuantity() + p.getQuantity());
-                pServ.deleteProduct(p.getId());
-                pServ.saveProduct(pRef);
+                productServiceImp.deleteProduct(p.getId());
+                productServiceImp.saveProduct(pRef);
             } else {
                 p.setBill(null);
-                pServ.saveProduct(p);
+                productServiceImp.saveProduct(p);
             }
         }
-        bServ.deleteBill(billId);
+        billServiceImp.deleteBill(billId);
         return "redirect:/showBills";
     }
 
     @GetMapping("/removeProduct")
     public String removeProduct(@RequestParam Integer productId) {
-        Product product = pServ.getProductById(productId);
+        Product product = productServiceImp.getProductById(productId);
         Bill bill = product.getBill();
         bill.setTotal(bill.getTotal() - product.getQuantity() * product.getPrice());
-        bServ.saveBill(bill);
+        billServiceImp.saveBill(bill);
         Product pRef = pRepo.findByReference(product.getReference());
         if (pRef != null) {
             pRef.setQuantity(pRef.getQuantity() + product.getQuantity());
-            pServ.saveProduct(pRef);
-            pServ.deleteProduct(productId);
+            productServiceImp.saveProduct(pRef);
+            productServiceImp.deleteProduct(productId);
         } else {
             product.setBill(null);
-            pServ.saveProduct(product);
+            productServiceImp.saveProduct(product);
         }
         return "redirect:/addProductToBillForm";
     }
@@ -129,8 +129,11 @@ public class BillController {
     public ModelAndView showBills(HttpSession session) {
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
         ModelAndView mav = new ModelAndView("showBills");
-
-        Store store = sServ.getStoreById(agent.getStore().getId());
+        mav.addObject("bumberOfBills",billServiceImp.getbillsNumberByStore(agent.getStore().getId()));
+        mav.addObject("billsTotal",billServiceImp.getBillsTotal(agent.getStore().getId()));
+        mav.addObject("avgBills",billServiceImp.getAvgBills(agent.getStore().getId()));
+        mav.addObject("maxTotal",billServiceImp.getMaxTotalBill(agent.getStore().getId()));
+        Store store = storeServiceImp.getStoreById(agent.getStore().getId());
         if (agent.getRole().getRoleId() == 2) {
             mav.addObject("bills", bRep.getbillsByAgent(agent.getId()));
         } else {
@@ -144,16 +147,16 @@ public class BillController {
         List<Product> listProduct = bRep.getBillProducts(billId);
         for (Product p : listProduct) {
             p.setBill(null);
-            pServ.saveProduct(p);
+            productServiceImp.saveProduct(p);
         }
-        bServ.deleteBill(billId);
+        billServiceImp.deleteBill(billId);
         return "redirect:/showBills";
     }
 
     @GetMapping("/billDetails")
     public String billDetails(@RequestParam Integer billId, HttpSession session, Model model) {
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
-        Bill bill = bServ.getBillById(billId);
+        Bill bill = billServiceImp.getBillById(billId);
         model.addAttribute("bill", bill);
         model.addAttribute("username", agent.getName());
         model.addAttribute("billProducts", bRep.getBillProducts(bill.getId()));
@@ -162,26 +165,26 @@ public class BillController {
 
     @GetMapping("/confirmBill")
     public String confirmBill(@RequestParam Integer billId) {
-        Bill bill = bServ.getBillById(billId);
+        Bill bill = billServiceImp.getBillById(billId);
         bill.setStatus("Confirmed");
-        bServ.saveBill(bill);
+        billServiceImp.saveBill(bill);
         return "redirect:/showBills";
     }
 
     @GetMapping("/removeProductBillDetails")
     public String removeProductBillDetails(@RequestParam Integer productId) {
-        Product product = pServ.getProductById(productId);
+        Product product = productServiceImp.getProductById(productId);
         Bill bill = product.getBill();
         bill.setTotal(bill.getTotal() - product.getQuantity() * product.getPrice());
-        bServ.saveBill(bill);
+        billServiceImp.saveBill(bill);
         Product pRef = pRepo.findByReference(product.getReference());
         if (pRef != null) {
             pRef.setQuantity(pRef.getQuantity() + product.getQuantity());
-            pServ.saveProduct(pRef);
-            pServ.deleteProduct(productId);
+            productServiceImp.saveProduct(pRef);
+            productServiceImp.deleteProduct(productId);
         } else {
             product.setBill(null);
-            pServ.saveProduct(product);
+            productServiceImp.saveProduct(product);
         }
         return "redirect:/billDetails?billId=" + bill.getId();
     }

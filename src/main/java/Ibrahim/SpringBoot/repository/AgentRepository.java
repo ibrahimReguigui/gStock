@@ -17,4 +17,9 @@ public interface AgentRepository extends JpaRepository<Agent, Integer> {
     List<Agent> getAgentsByStore(Long id);
 
     Optional<Agent> findAgentByEmail(String email);
+
+    @Query("select count(a) from Agent a where a.store.id=?1 and a.role.roleId<>3 and a.status=1")
+    Integer getNumberOfAgentByStore(Long id);
+    @Query("select count(a) from Agent a where a.store.id=?1 and a.role.roleId<>3 and a.status=0")
+    Integer getAwaitingConfirmationAgents(Long id);
 }

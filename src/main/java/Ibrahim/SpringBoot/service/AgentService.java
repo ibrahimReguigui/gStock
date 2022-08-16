@@ -24,4 +24,7 @@ public interface AgentService {
     public void updateAgent(Agent agent);
 
     public Optional<Agent> findAgentByEmail(String email);
+
+    Integer getNumberOfAgentByStore(Long id);
+    Integer getAwaitingConfirmationAgents(Long id);
 }

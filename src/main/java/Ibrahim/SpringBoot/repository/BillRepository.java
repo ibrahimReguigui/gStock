@@ -17,4 +17,12 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
     public List<Bill> getbillsByAgent(Integer id);
     @Query("select b from Bill b where b.store.id=?1 " )
     List<Bill>getBillsByStore(Long id);
+    @Query("select count(b) from Bill b where b.store.id=?1 " )
+    Integer getbillsNumberByStore(Long id);
+    @Query("select sum (b.total) from Bill b where b.store.id=?1 " )
+    float getBillsTotal(Long id);
+    @Query("select avg (b.total) from Bill b where b.store.id=?1 " )
+    float getAvgBills(Long id);
+    @Query("select max (b.total) from Bill b where b.store.id=?1 " )
+    float getMaxTotalBill(Long id);
 }

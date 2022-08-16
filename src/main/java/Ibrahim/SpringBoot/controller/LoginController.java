@@ -2,7 +2,9 @@ package Ibrahim.SpringBoot.controller;
 
 import Ibrahim.SpringBoot.model.Agent;
 import Ibrahim.SpringBoot.service.AgentServiceImp;
+import Ibrahim.SpringBoot.service.ProductServiceImp;
 import Ibrahim.SpringBoot.service.RoleServiceImp;
+import Ibrahim.SpringBoot.service.StoreServiceImp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -30,6 +32,10 @@ public class LoginController {
     private RoleServiceImp roleServiceImp;
     @Autowired
     private AgentServiceImp agentServiceImp;
+    @Autowired
+    private StoreServiceImp storeServiceImp;
+    @Autowired
+    private ProductServiceImp productServiceImp;
 
     @RequestMapping(value = "/login", method = {RequestMethod.GET, RequestMethod.POST})
     public String displayLoginPage(@RequestParam(value = "error", required = false) String error,
@@ -71,6 +77,12 @@ public class LoginController {
     @GetMapping("/home")
     public ModelAndView homePage(Authentication authentication, HttpSession session, Principal principal) {
         ModelAndView mav = new ModelAndView("homePage");
+        Integer agentSize=agentServiceImp.getAllAgents().size();
+        Integer productSize=productServiceImp.getAllProduct().size();
+        Integer storeSize=storeServiceImp.getStore().size();
+        mav.addObject("agentSize",agentSize);
+        mav.addObject("productSize",productSize);
+        mav.addObject("storeSize",storeSize);
         if(principal==null){
             return mav;
         }
