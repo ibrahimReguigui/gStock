@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -81,10 +82,13 @@ public class AgentContoller {
     }
 
     @GetMapping("/updateAgentForm")
-    public ModelAndView updateAgent(@RequestParam Integer agentId) {
+    public ModelAndView updateAgent(@RequestParam Integer agentId, HttpSession session) {
         ModelAndView mav = new ModelAndView("updateAgent");
+        Agent LoggedInAgent = (Agent) session.getAttribute("LoggedInAgent");
+        System.out.println(LoggedInAgent.getRole());
+        mav.addObject("LoggedInAgent", LoggedInAgent);
         mav.addObject("agent", agentServiceImp.getAgentById(agentId));
-        List<Role> roles=roleServiceImp.getRoles();
+        List<Role> roles = roleServiceImp.getRoles();
         roles.remove(2);
         mav.addObject("roles", roles);
         mav.addObject("allStatus", AgentStatus.values());
@@ -98,5 +102,34 @@ public class AgentContoller {
         agent.setStatus(newA.getStatus());
         agentServiceImp.updateAgent(agent);
         return "redirect:/agentsList";
+    }
+
+    @GetMapping("/profile")
+    public ModelAndView agentProfile(HttpSession session) {
+        ModelAndView mav = new ModelAndView("profile");
+        Agent LoggedInAgent = (Agent) session.getAttribute("LoggedInAgent");
+        mav.addObject("LoggedInAgent", LoggedInAgent);
+        return mav;
+    }
+
+    @PostMapping("updateProfile")
+    public String updateProfile( RedirectAttributes redirAttrs,@ModelAttribute Agent newA, HttpSession session, Model model, BindingResult bindingResult) {
+        Agent agent = agentServiceImp.getAgentById(newA.getId());
+
+        if(newA.getMobileNumber().isEmpty()){
+            redirAttrs.addFlashAttribute("mobileNumberEmpty",  "Mobile number must not be blank");
+        }else if (newA.getMobileNumber().matches("(^$|[0-9]{8})")) {
+            agent.setMobileNumber(newA.getMobileNumber());
+            agentServiceImp.updateAgent(agent);
+        } else {
+            redirAttrs.addFlashAttribute("mobileNumberInvalid",  "Mobile number must be 8 digits");
+        }
+
+
+        session.setAttribute("LoggedInAgent", agent);
+        Agent LoggedInAgent = (Agent) session.getAttribute("LoggedInAgent");
+        model.addAttribute("LoggedInAgent",LoggedInAgent);
+
+        return "redirect:/profile";
     }
 }

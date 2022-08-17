@@ -63,12 +63,18 @@
                 <!--                -->
                 <li class="nav-item" sec:authorize="hasRole('ROLE_OWNER')">
                     <a th:classappend="${#httpServletRequest.getRequestURI() == '/agentsList' ? 'active':''}"
-                       th:href="@{/agentsList}" class="nav-link">Agents List</a>
+                       th:href="@{/agentsList}" class="nav-link">Agents</a>
                 </li>
-                <li sec:authorize="isAuthenticated()">
-                    <a class="get-a-quote"
-                       th:classappend="${#httpServletRequest.getRequestURI() == '/logout' ? 'active':''}"
-                       th:href="@{/logout}">Logout</a>
+                <li class=" dropdown " sec:authorize="isAuthenticated()" >
+                    <a class="nav-link dropdown-toggle get-a-quote"  id="userDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${session.LoggedInAgent.name}"></span>
+                    </a>
+                    <!-- Dropdown - User Information -->
+                    <ul >
+                        <li><a th:href="@{/profile}" >Profile</a></li>
+                        <li  ><a th:href="@{/logout}" >Logout</a></li>
+                    </ul>
                 </li>
             </ul>
         </nav><!-- .navbar -->
