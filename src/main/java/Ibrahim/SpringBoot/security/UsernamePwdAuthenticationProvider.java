@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 public class UsernamePwdAuthenticationProvider implements AuthenticationProvider {
     @Autowired
-    private AgentRepository aRepo;
+    private AgentRepository agentRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -30,7 +30,7 @@ public class UsernamePwdAuthenticationProvider implements AuthenticationProvider
             throws AuthenticationException {
         String email = authentication.getName();
         String pwd = authentication.getCredentials().toString();
-        Agent agent = aRepo.readByEmail(email);
+        Agent agent = agentRepository.readByEmail(email);
         if (null != agent && agent.getId() > 0 &&
                 passwordEncoder.matches(pwd, agent.getPwd()) &&
                 agent.getStatus().equals(AgentStatus.CONFIRMED)) {

@@ -65,6 +65,7 @@ public class AgentServiceImp implements AgentService {
     }
 
     ;
+
     public Integer getAwaitingConfirmationAgents(Long id) {
         return agentRepository.getAwaitingConfirmationAgents(id);
     }

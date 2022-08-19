@@ -74,7 +74,7 @@ public class LoginController {
         return "register-agent.html";
     }
 
-    @GetMapping("/home")
+    @GetMapping(value = {"/home","/"})
     public ModelAndView homePage(Authentication authentication, HttpSession session, Principal principal) {
         ModelAndView mav = new ModelAndView("homePage");
         Integer agentSize=agentServiceImp.getAllAgents().size();

@@ -42,7 +42,7 @@ public class Agent extends BaseEntity{
     @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST, targetEntity = Role.class)
     @JoinColumn(name = "role_id", referencedColumnName = "roleId",nullable = false)
     private Role role;
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne( optional = true)
     @JoinColumn(name = "store_id",referencedColumnName = "id")
     private Store store;
     @NotBlank(message="Mobile number must not be blank")
@@ -69,9 +69,12 @@ public class Agent extends BaseEntity{
     @Transient
     private String confirmPwd;
 
-    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "id",
             cascade = CascadeType.PERSIST,targetEntity = Bill.class)
     private List<Bill> Bills;
 
     private AgentStatus status=AgentStatus.AWAITING_CONFIRMATION;
+    @Lob
+    @Column(columnDefinition = "MEDIUMBLOB")
+    private String image;
 }

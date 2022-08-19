@@ -24,6 +24,10 @@
             <ul>
                 <li class="nav-item" sec:authorize="isAnonymous()">
                     <a th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"
+                       th:href="@{/register}" class="nav-link">Register</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"
                        th:href="@{/login}" class="nav-link">LogIn</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">

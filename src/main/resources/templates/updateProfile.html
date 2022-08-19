@@ -74,79 +74,51 @@
         </nav>
     </div><!-- End Breadcrumbs -->
     <section id="service-details" class="service-details">
-        <div style="text-align: center" class="alert alert-success" role="alert"
-             th:text="${success}"
-             th:if="${success}"></div>
         <div class="container" data-aos="fade-up">
 
             <div class="row gy-4">
 
                 <div class="col-lg-4">
                     <div class="services-list">
-                        <a th:href="@{/profile}"  class="active">Informations</a>
-                        <a th:href="@{/updateProfile}"  >Update Profile</a>
+                        <a th:href="@{/profile}">Informations</a>
+                        <a th:href="@{/updateProfile}" class="active">Update Profile</a>
                         <a th:href="@{/changePasswordForm}">Change Password</a>
                     </div>
                 </div>
                 <div class="col-lg-8">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <div class="row">
+                            <form class="row" th:action="@{/updateMobileNumber}" th:object="${agent}" method="POST">
                                 <div class="col-sm-3">
-                                    <p class="mb-0">Name</p>
+                                    <p class=" col-form-label">Phone Number</p>
                                 </div>
-                                <div class="col-sm-9">
-                                    <p th:text="${LoggedInAgent.name}" class="text-muted mb-0">Johnatan Smith</p>
+                                <div class="col-sm-6">
+                                    <input class="form-control" th:field="*{mobileNumber}">
+                                    <div style="text-align: center" class="alert alert-danger" role="alert"
+                                         th:text="${mobileNumberEmpty}"
+                                         th:if="${mobileNumberEmpty}"></div>
+                                    <div style="text-align: center" class="alert alert-danger" role="alert"
+                                         th:text="${mobileNumberInvalid}"
+                                         th:if="${mobileNumberInvalid}"></div>
                                 </div>
-                            </div>
+
+                                <div class="col-sm-3">
+                                    <button class=" mb-0 btn btn-primary btn-user btn-block" >Update</button>
+                                </div>
+                            </form>
                             <hr>
-                            <div class="row">
+                            <form class="row" th:action="@{/updateImage}" th:object="${agent}" method="POST">
                                 <div class="col-sm-3">
-                                    <p class="mb-0">Email</p>
+                                    <p class="text-muted mb-0" for="customFile">Image</p>
                                 </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0" th:text="${LoggedInAgent.email}">example@example.com</p>
+                                <div class="col-sm-6">
+                                    <input type="file" name="file" class="custom-file-input"
+                                           id="customFile" th:field="*{image}">
                                 </div>
-                            </div>
-                            <hr>
-                            <div class="row">
                                 <div class="col-sm-3">
-                                    <p class="mb-0">Phone</p>
+                                    <button class=" mb-0 btn btn-primary btn-user btn-block" >Update</button>
                                 </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0" th:text="${LoggedInAgent.mobileNumber}">(097)
-                                        234-5678</p>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Store</p>
-                                </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0" th:text="${LoggedInAgent.store.storeName}">(098)
-                                        765-4321</p>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Role</p>
-                                </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0" th:text="${LoggedInAgent.role.roleName}">Bay Area, San
-                                        Francisco, CA</p>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Status</p>
-                                </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0" th:text="${LoggedInAgent.status}">Bay Area, San
-                                        Francisco, CA</p>
-                                </div>
+                            </form>
                             </div>
                         </div>
                     </div>

@@ -15,13 +15,13 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("select p from Product p where p.reference=?1 and p.bill is null " )
     Product findByReference(String ref );
 
-    @Query("select sum(p.quantity) from Product p where p.store.id=?1 and p.bill is null " )
+    @Query("select coalesce( sum(p.quantity),0) from Product p where p.store.id=?1 and p.bill is null " )
     Integer getTotalQuantityByStore(Long id );
 
     @Query("select distinct p.categories from Product p where p.store.id=?1 and p.bill is null" )
     List<String> getNumberOfCategorieByStore(Long id );
 
-    @Query("select sum(p.quantity*p.price) from Product p where p.store.id=?1 and p.bill is null" )
+    @Query("select coalesce(sum(p.quantity*p.price),0) from Product p where p.store.id=?1 and p.bill is null" )
     float getTotalPriceInStore(Long id );
 
     @Query("select count (p) from Product p where p.store.id=?1 and p.bill is null" )

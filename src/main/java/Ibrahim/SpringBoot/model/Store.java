@@ -26,13 +26,13 @@ public class Store {
     @Pattern(regexp="(^$|[0-9]{8})",message = "Mobile number must be 8 digits")
     private String storeNumber;
 
-    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "store",fetch = FetchType.EAGER,
             cascade = CascadeType.REMOVE,targetEntity = Product.class)
     private List<Product> Products;
-    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "store",
             cascade = CascadeType.REMOVE,targetEntity = Agent.class)
     private List<Agent> Agents;
-    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY,
+    @OneToMany(mappedBy = "store",
             cascade = CascadeType.REMOVE,targetEntity = Agent.class)
     private List<Bill> Bills;
 }
