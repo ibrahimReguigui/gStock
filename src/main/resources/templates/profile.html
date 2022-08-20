@@ -68,7 +68,7 @@
             <div class="container">
                 <ol>
                     <li><a th:href="@{/agentsList}">Profile</a></li>
-                    <li>Update</li>
+                    <li>Informations</li>
                 </ol>
             </div>
         </nav>
@@ -83,16 +83,27 @@
 
                 <div class="col-lg-4">
                     <div class="services-list">
-                        <a th:href="@{/profile}"  class="active">Informations</a>
-                        <a th:href="@{/updateProfile}"  >Update Profile</a>
+                        <a th:href="@{/profile}" class="active">Informations</a>
+                        <a th:href="@{/updateProfile}">Update Profile</a>
                         <a th:href="@{/changePasswordForm}">Change Password</a>
+
                     </div>
                 </div>
-                <div class="col-lg-8">
-                    <div class="card mb-4">
-                        <div class="card-body">
+                <div class="col-lg-8 text-center">
+                    <div style="display: flex;justify-content: center;align-content: center">
+                    <div class="card mb-4" style="width: 400px">
+                        <div class="card-body text-center">
+                            <img th:src="${'/Images/'+LoggedInAgent.getImage()}"
+                                 class="rounded-circle img-fluid" style="width: 300px;height: 300px">
+                        </div>
+                    </div>
+                    </div>
+                    <div style="display: flex;justify-content: center;align-content: center">
+                    <div class="card mb-4" style="width: 700px">
+
+                        <div class="card-body ">
                             <div class="row">
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 ">
                                     <p class="mb-0">Name</p>
                                 </div>
                                 <div class="col-sm-9">
@@ -150,6 +161,7 @@
                             </div>
                         </div>
                     </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -179,6 +191,7 @@
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
+
 
 </body>
 

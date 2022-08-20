@@ -74,7 +74,6 @@ public class Agent extends BaseEntity{
     private List<Bill> Bills;
 
     private AgentStatus status=AgentStatus.AWAITING_CONFIRMATION;
-    @Lob
-    @Column(columnDefinition = "MEDIUMBLOB")
-    private String image;
+
+    private String image="images.png";
 }

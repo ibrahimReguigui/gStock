@@ -28,6 +28,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
 
@@ -75,6 +78,15 @@ public class AgentContoller {
     @GetMapping("/agentsList")
     public String agentsList(HttpSession session, Model model) {
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
+        for (Agent employee: agentRepository.getAgentsByStore(agent.getStore().getId())){
+            String filename = employee.getId() + employee.getImage().substring(employee.getImage().length() - 4);
+            Path fileNameAndPath = Paths.get(System.getProperty("user.dir") + "/src/main/resources/static/Images", filename);
+            try {
+                Files.write(fileNameAndPath, employee.getImage().getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         model.addAttribute("agents", agentRepository.getAgentsByStore(agent.getStore().getId()));
         model.addAttribute("numberOfAgents", agentRepository.getNumberOfAgentByStore(agent.getStore().getId()));
         model.addAttribute("awaitingAgents", agentRepository.getAwaitingConfirmationAgents(agent.getStore().getId()));
@@ -119,6 +131,7 @@ public class AgentContoller {
 
         return mav;
     }
+
     @GetMapping("/updateProfile")
     public ModelAndView updateProfile(HttpSession session) {
         ModelAndView mav = new ModelAndView("updateProfile");
@@ -154,73 +167,82 @@ public class AgentContoller {
         ModelAndView mav = new ModelAndView("changePasswordForm");
         Agent LoggedInAgent = (Agent) session.getAttribute("LoggedInAgent");
         mav.addObject("LoggedInAgent", LoggedInAgent);
-        mav.addObject("agent",new Agent());
+        mav.addObject("agent", new Agent());
         return mav;
     }
 
     @PostMapping("/changePassword")
-    public String changePassword( RedirectAttributes redirAttrs,@ModelAttribute Agent agent, HttpSession session, Model model) {
+    public String changePassword(RedirectAttributes redirAttrs, @ModelAttribute Agent agent, HttpSession session, Model model) {
 
         Agent LoggedInAgent = (Agent) session.getAttribute("LoggedInAgent");
-        if(agent.getName().isEmpty()){
-            redirAttrs.addFlashAttribute("ancientPasswordEmpty",  "Ancient Password must not be blank");
-        }else if(!passwordEncoder.matches(agent.getName(),LoggedInAgent.getPwd() )){
-            redirAttrs.addFlashAttribute("wrongPassword",  "Wrong Password!");
+        if (agent.getName().isEmpty()) {
+            redirAttrs.addFlashAttribute("ancientPasswordEmpty", "Ancient Password must not be blank");
+        } else if (!passwordEncoder.matches(agent.getName(), LoggedInAgent.getPwd())) {
+            redirAttrs.addFlashAttribute("wrongPassword", "Wrong Password!");
         }
-        if(agent.getPwd().isEmpty()){
-            redirAttrs.addFlashAttribute("passwordEmpty",  "Password must not be blank");
-        } else  if(agent.getPwd().length()<5){
-            redirAttrs.addFlashAttribute("shortPassword",  "Password must be at least 5 characters long");
+        if (agent.getPwd().isEmpty()) {
+            redirAttrs.addFlashAttribute("passwordEmpty", "Password must not be blank");
+        } else if (agent.getPwd().length() < 5) {
+            redirAttrs.addFlashAttribute("shortPassword", "Password must be at least 5 characters long");
         }
-        if(agent.getConfirmPwd().isEmpty()){
-            redirAttrs.addFlashAttribute("confirmPasswordEmpty",  "Confirm Password must not be blank");
-        }else if(!agent.getPwd().equals(agent.getConfirmPwd())){
-            redirAttrs.addFlashAttribute("PwdConfirmPwdMismatch",  "Passwords do not match!");
+        if (agent.getConfirmPwd().isEmpty()) {
+            redirAttrs.addFlashAttribute("confirmPasswordEmpty", "Confirm Password must not be blank");
+        } else if (!agent.getPwd().equals(agent.getConfirmPwd())) {
+            redirAttrs.addFlashAttribute("PwdConfirmPwdMismatch", "Passwords do not match!");
         }
-        if (redirAttrs.getFlashAttributes().isEmpty()){
-            Agent modifiedAgent=agentServiceImp.getAgentById(LoggedInAgent.getId());
+        if (redirAttrs.getFlashAttributes().isEmpty()) {
+            Agent modifiedAgent = agentServiceImp.getAgentById(LoggedInAgent.getId());
             modifiedAgent.setPwd(agent.getPwd());
             agentServiceImp.saveAgent(modifiedAgent);
-            Agent finalAgent=agentServiceImp.getAgentById(LoggedInAgent.getId());
-            redirAttrs.addFlashAttribute("success",  "Passwords Changed!");
+            Agent finalAgent = agentServiceImp.getAgentById(LoggedInAgent.getId());
+            redirAttrs.addFlashAttribute("success", "Passwords Changed!");
             session.setAttribute("LoggedInAgent", finalAgent);
         }
 
-        model.addAttribute("LoggedInAgent",LoggedInAgent);
+        model.addAttribute("LoggedInAgent", LoggedInAgent);
 
         return "redirect:/changePasswordForm";
     }
 
     @PostMapping("/updateMobileNumber")
-    public String updateMobileNumber( RedirectAttributes redirAttrs,@ModelAttribute Agent agent, HttpSession session, Model model) {
+    public String updateMobileNumber(RedirectAttributes redirAttrs, @ModelAttribute Agent agent, HttpSession session, Model model) {
         Agent LoggedInAgent = (Agent) session.getAttribute("LoggedInAgent");
-        if(agent.getMobileNumber().isEmpty()){
-            redirAttrs.addFlashAttribute("mobileNumberEmpty",  "Mobile number must not be blank");
-        }else if (agent.getMobileNumber().matches("(^$|[0-9]{8})")) {
+        if (agent.getMobileNumber().isEmpty()) {
+            redirAttrs.addFlashAttribute("mobileNumberEmpty", "Mobile number must not be blank");
+        } else if (agent.getMobileNumber().matches("(^$|[0-9]{8})")) {
             LoggedInAgent.setMobileNumber(agent.getMobileNumber());
             agentServiceImp.updateAgent(LoggedInAgent);
             session.setAttribute("LoggedInAgent", LoggedInAgent);
-            redirAttrs.addFlashAttribute("success",  "Mobile number changed !");
+            redirAttrs.addFlashAttribute("success", "Mobile number changed !");
             return "redirect:/profile";
         } else {
-            redirAttrs.addFlashAttribute("mobileNumberInvalid",  "Mobile number must be 8 digits");
+            redirAttrs.addFlashAttribute("mobileNumberInvalid", "Mobile number must be 8 digits");
         }
         return "redirect:/updateProfile";
     }
 
     @PostMapping("/updateImage")
-    public String updateImage( RedirectAttributes redirAttrs,@ModelAttribute Agent agent , MultipartFile file, HttpSession session, Model model) {
-        Agent LoggedInAgent = (Agent) session.getAttribute("LoggedInAgent");
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        if(fileName.contains(".."))
-        {
-            System.out.println("not a a valid file");
+    public String updateImage(RedirectAttributes redirAttrs, @RequestParam MultipartFile file, HttpSession session, Model model) {
+        if (file.isEmpty()) {
+            redirAttrs.addFlashAttribute("pictureError", "You did not chose a picture !");
+            return "redirect:/updateProfile";
         }
+        Agent LoggedInAgent = (Agent) session.getAttribute("LoggedInAgent");
+
+        String filename = LoggedInAgent.getId() + file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4);
+        Path fileNameAndPath = Paths.get(System.getProperty("user.dir") + "/src/main/resources/static/Images", filename);
         try {
-            agent.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+            Files.write(fileNameAndPath, file.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "incomplite";
+        LoggedInAgent.setImage(filename);
+        agentServiceImp.updateAgent(LoggedInAgent);
+        session.setAttribute("LoggedInAgent", LoggedInAgent);
+        Agent updatedLoggedInAgent = (Agent) session.getAttribute("LoggedInAgent");
+        model.addAttribute("LoggedInAgent", updatedLoggedInAgent);
+        model.addAttribute("agent", updatedLoggedInAgent);
+        redirAttrs.addFlashAttribute("success", "Photo updated !");
+        return "redirect:/profile";
     }
 }

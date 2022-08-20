@@ -107,13 +107,16 @@
                                 </div>
                             </form>
                             <hr>
-                            <form class="row" th:action="@{/updateImage}" th:object="${agent}" method="POST">
+                            <form class="row" th:action="@{/updateImage}"  method="POST" enctype="multipart/form-data">
                                 <div class="col-sm-3">
                                     <p class="text-muted mb-0" for="customFile">Image</p>
                                 </div>
                                 <div class="col-sm-6">
                                     <input type="file" name="file" class="custom-file-input"
-                                           id="customFile" th:field="*{image}">
+                                           id="customFile" accept="image/png, image/jpeg" >
+                                    <div style="text-align: center" class="alert alert-danger" role="alert"
+                                         th:text="${pictureError}"
+                                         th:if="${pictureError}"></div>
                                 </div>
                                 <div class="col-sm-3">
                                     <button class=" mb-0 btn btn-primary btn-user btn-block" >Update</button>

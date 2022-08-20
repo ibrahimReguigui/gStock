@@ -72,6 +72,32 @@
             </div>
         </nav>
     </div><!-- End Breadcrumbs -->
+<!--    <section id="team" class="team pt-0">-->
+<!--        <div class="container" data-aos="fade-up">-->
+<!--            <div class="row" data-aos="fade-up" data-aos-delay="100">-->
+
+<!--                <div class="col-lg-4 col-md-6 d-flex" th:each="agent:${agents}">-->
+<!--                    <div class="member">-->
+<!--                        <img th:src="${'/Images/'+agent.getImage()}" class="img-fluid" alt="">-->
+<!--                        <div class="member-content">-->
+<!--                            <h4 th:text="${agent.name}">Walter White</h4>-->
+<!--                            <span th:text="${agent.role.roleName}">Web Development</span>-->
+<!--                            <p th:text="${agent.email}">-->
+<!--                                Magni qui quod omnis unde et eos fuga et exercitationem. Odio veritatis perspiciatis-->
+<!--                                quaerat qui aut aut aut-->
+<!--                            </p>-->
+<!--                            <div class="social">-->
+<!--                                <a href=""><i class="bi bi-twitter"></i></a>-->
+<!--                                <a href=""><i class="bi bi-facebook"></i></a>-->
+<!--                                <a href=""><i class="bi bi-instagram"></i></a>-->
+<!--                                <a href=""><i class="bi bi-linkedin"></i></a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </section>-->
 
     <div id="wrapper">
         <div id="content-wrapper" class="d-flex flex-column">
@@ -80,7 +106,7 @@
             <div id="content">
                 <div class="container-fluid">
                     <div class="card shadow mb-4">
-                        <div class="card-body"sec:authorize="hasRole('ROLE_OWNER')">
+                        <div class="card-body" sec:authorize="hasRole('ROLE_OWNER')">
                             <div class="row" style="display: flex;justify-content: center">
 
                                 <!-- Earnings (Monthly) Card Example -->
@@ -90,8 +116,11 @@
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                        Confirmed Agents</div>
-                                                    <div th:text="${numberOfAgents}" class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                        Confirmed Agents
+                                                    </div>
+                                                    <div th:text="${numberOfAgents}"
+                                                         class="h5 mb-0 font-weight-bold text-gray-800">$40,000
+                                                    </div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -106,8 +135,11 @@
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col mr-2">
                                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                        Awaiting Confirmation </div>
-                                                    <div th:text="${awaitingAgents}" class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                        Awaiting Confirmation
+                                                    </div>
+                                                    <div th:text="${awaitingAgents}"
+                                                         class="h5 mb-0 font-weight-bold text-gray-800">$40,000
+                                                    </div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <i class="fas fa-person-circle-question fa-2x text-gray-300"></i>
@@ -124,6 +156,7 @@
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                     <tr>
+                                        <th>Photo</th>
                                         <th>Name</th>
                                         <th>Role</th>
                                         <th>EMail</th>
@@ -134,14 +167,17 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="agent:${agents}">
+                                        <td><img th:src="${'/Images/'+agent.image}"
+                                                  ></td>
                                         <td th:text="${agent.name}"></td>
                                         <td th:text="${agent.role.roleName}"></td>
                                         <td th:text="${agent.email}"></td>
                                         <td th:text="${agent.mobileNumber}"></td>
                                         <td th:text="${agent.status.status}"></td>
-                                        <td >
-                                            <a  th:href="@{/updateAgentForm(agentId=${agent.id})}"class="btn btn-info">Update</a>
-                                            <a th:href="@{/deleteAgent(agentId=${agent.id})}" class="btn btn-danger ml-2 ">Delete</a>
+                                        <td>
+                                            <a th:href="@{/updateAgentForm(agentId=${agent.id})}" class="btn btn-info">Update</a>
+                                            <a th:href="@{/deleteAgent(agentId=${agent.id})}"
+                                               class="btn btn-danger ml-2 ">Delete</a>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -150,13 +186,13 @@
                             </div>
                         </div>
                     </div>
-                    <a th:href="@{/billForm}" class="btn btn-primary mb-2" sec:authorize="hasRole('ROLE_VENDOR')">New Bill</a>
+                    <a th:href="@{/billForm}" class="btn btn-primary mb-2" sec:authorize="hasRole('ROLE_VENDOR')">New
+                        Bill</a>
+
                 </div>
             </div>
         </div>
     </div>
-
-
 
 
 </main><!-- End #main -->
