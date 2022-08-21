@@ -75,73 +75,79 @@
         </nav>
     </div><!-- End Breadcrumbs -->
 
-    <section id="contact" class="contact">
-        <div class="container" data-aos="fade-up">
-
-
-            <div class="col-lg-8 ">
-                <form th:action="@{/updateAgent}" th:object="${agent}" method="post" role="form"
-                      style="width: 100%;background: #fff;">
-                    <div class="row">
-                        <h4 class="col-sm-2 col-form-label ">Name</h4>
-                        <div class="col-md-6 form-group">
-                            <input type="text" name="name" th:field="*{name}" class="form-control col-4 mb-4"
-                                   placeholder="Product reference" readonly>
-                            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
-                                 class="alert alert-danger "></div>
+    <section id="contact" class="contact" >
+        <div class="container" data-aos="fade-up" >
+            <div class="row" >
+                <div class="col-lg-5 d-none d-lg-block ">
+                    <img th:src="|data:image/png;base64,${agent.image}|"
+                         style="background-position: center;height:100%;width:100%;background-size: cover">
+                </div>
+                <div class="col-lg-7">
+                    <form th:action="@{/updateAgent}" th:object="${agent}" method="post" role="form"
+                          style="width: 100%;background: #fff;">
+                        <div class="row">
+                            <h4 class="col-sm-2 col-form-label ">Name</h4>
+                            <div class="col-md-6 form-group">
+                                <input type="text" name="name" th:field="*{name}" class="form-control col-4 mb-4"
+                                       placeholder="Product reference" readonly>
+                                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                                     class="alert alert-danger "></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <h4 class="col-sm-2 col-form-label ">Email</h4>
-                        <div class="col-md-6 form-group">
-                            <input type="text" name="name" th:field="*{email}" class="form-control col-4 mb-4"
-                                   placeholder="Product Name" readonly>
-                            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
-                                 class="alert alert-danger  "></div>
-                        </div>
+                        <div class="row">
+                            <h4 class="col-sm-2 col-form-label ">Email</h4>
+                            <div class="col-md-6 form-group">
+                                <input type="text" name="name" th:field="*{email}" class="form-control col-4 mb-4"
+                                       placeholder="Product Name" readonly>
+                                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                                     class="alert alert-danger  "></div>
+                            </div>
 
-                    </div>
-                    <div class="row">
-                        <h4 class="col-sm-2 col-form-label ">Mobile Number</h4>
-                        <div class="col-md-6 form-group">
-                            <input type="text" name="name" th:field="*{mobileNumber}" class="form-control col-4 mb-4"
-                                   placeholder="Product Name" readonly>
-                            <div th:if="${#fields.hasErrors('mobileNumber')}" th:errors="*{mobileNumber}"
-                                 class="alert alert-danger  "></div>
                         </div>
+                        <div class="row">
+                            <h4 class="col-sm-2 col-form-label ">Mobile Number</h4>
+                            <div class="col-md-6 form-group">
+                                <input type="text" name="name" th:field="*{mobileNumber}"
+                                       class="form-control col-4 mb-4"
+                                       placeholder="Product Name" readonly>
+                                <div th:if="${#fields.hasErrors('mobileNumber')}" th:errors="*{mobileNumber}"
+                                     class="alert alert-danger  "></div>
+                            </div>
 
-                    </div>
-                    <div class="row">
-                        <h4 class="col-sm-2 col-form-label ">Role</h4>
-                        <div class="col-md-6 form-group">
-                            <select class="form-select col-4 mb-4" th:field="*{role}">
-                                <option th:each="role :${roles}" th:text="${role.roleName}" th:value="${role.roleId}"
-                                        th:selected="${role.roleId}"></option>
-                            </select>
                         </div>
+                        <div class="row">
+                            <h4 class="col-sm-2 col-form-label ">Role</h4>
+                            <div class="col-md-6 form-group">
+                                <select class="form-select col-4 mb-4" th:field="*{role}">
+                                    <option th:each="role :${roles}" th:text="${role.roleName}"
+                                            th:value="${role.roleId}"
+                                            th:selected="${role.roleId}"></option>
+                                </select>
+                            </div>
 
-                    </div>
-                    <div class="row">
-                        <h4 class="col-sm-2 col-form-label">Status</h4>
-                        <div class="col-md-6 form-group">
-                        <select  class=" form-select col-4 mb-4" th:field="*{status}">
-                            <option  th:each="status:${allStatus}" th:text="${status.status}" th:value="${status}"></option>
-                        </select>
                         </div>
+                        <div class="row">
+                            <h4 class="col-sm-2 col-form-label">Status</h4>
+                            <div class="col-md-6 form-group">
+                                <select class=" form-select col-4 mb-4" th:field="*{status}">
+                                    <option th:each="status:${allStatus}" th:text="${status.status}"
+                                            th:value="${status}"></option>
+                                </select>
+                            </div>
 
-                    </div>
-                    <input type="hidden" th:field="*{id}">
-                    <input type="hidden" th:field="*{pwd}">
-                    <div style="display: flex;gap: 350px;">
-                        <a class="btn btn-secondary ml-2"
-                           th:href="@{/agentsList}">Back</a>
-                        <div class="text-center">
-                            <button class="btn btn-primary ml-2" type="submit">Save</button>
                         </div>
-                    </div>
-                </form>
-            </div><!-- End Contact Form -->
-
+                        <input type="hidden" th:field="*{id}">
+                        <input type="hidden" th:field="*{pwd}">
+                        <div style="display: flex;gap: 350px;">
+                            <a class="btn btn-secondary ml-2"
+                               th:href="@{/agentsList}">Back</a>
+                            <div class="text-center">
+                                <button class="btn btn-primary ml-2" type="submit">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div><!-- End Contact Form -->
+            </div>
         </div>
 
         </div>

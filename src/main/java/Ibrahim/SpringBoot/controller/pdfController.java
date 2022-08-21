@@ -19,7 +19,7 @@ public class pdfController {
     @GetMapping("/createPdf")
     public String pdfFile(@RequestParam Integer billId, RedirectAttributes redirAttrs){
         pdfService.createPdf(billId);
-        redirAttrs.addFlashAttribute("success", "File Downloaded .");
+        redirAttrs.addFlashAttribute("success", "File Downloaded In "+System.getProperty("user.dir")+"\\src\\main\\resources\\pdfFiles\\");
         return "redirect:/billDetails?billId=" + billId;
     }
 }

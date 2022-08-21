@@ -75,5 +75,7 @@ public class Agent extends BaseEntity{
 
     private AgentStatus status=AgentStatus.AWAITING_CONFIRMATION;
 
-    private String image="images.png";
+    @Lob
+    @Column(columnDefinition = "BLOB")
+    private String image;
 }

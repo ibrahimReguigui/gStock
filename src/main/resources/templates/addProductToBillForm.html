@@ -109,10 +109,23 @@
                                                         <td th:text="${product.quantity}"></td>
                                                         <td th:text="${product.price}"></td>
                                                         <td>
-                                                            <a th:href="@{/addProductToBill(productId=${product.id})}"
-                                                               class="btn btn-info">All</a>
-                                                            <a th:href="@{/splitProductForm(productId=${product.id})}"
-                                                               class="btn btn-info">Part</a>
+                                                            <table>
+                                                                <tr>
+                                                                    <td>
+                                                                        <form th:action="@{/splitProduct}" >
+
+                                                                            <input id="wantedQuantity" name="wantedQuantity"
+                                                                                    style="width: 60px">
+                                                                            <input type="hidden" th:value="${product.id}" id="productId" name="productId">
+                                                                            <button class="btn btn-info">Part</button>
+                                                                        </form>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a th:href="@{/addProductToBill(productId=${product.id})}"
+                                                                           class="btn btn-info">All</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -178,6 +191,12 @@
                                 <div class="container-fluid">
                                     <div class="card shadow mb-4">
                                         <div class="card-body">
+                                            <div style="text-align: center" class="alert alert-danger" role="alert"
+                                                 th:text="${wantedSup}"
+                                                 th:if="${wantedSup}"></div>
+                                            <div style="text-align: center" class="alert alert-danger" role="alert"
+                                                 th:text="${wantedInf}"
+                                                 th:if="${wantedInf}"></div>
                                             <div class="table-responsive">
                                                 <table class="table table-bordered" width="100%" cellspacing="0">
                                                     <thead>

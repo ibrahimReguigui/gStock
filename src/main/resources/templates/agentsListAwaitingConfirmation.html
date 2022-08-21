@@ -93,16 +93,16 @@
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col mr-2">
 
-                                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                            Confirmed Agents
-                                                        </div>
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                        Awaiting Confirmation
+                                                    </div>
 
-                                                    <div th:text="${numberOfAgents}"
+                                                    <div th:text="${awaitingAgents}"
                                                          class="h5 mb-0 font-weight-bold text-gray-800">$40,000
                                                     </div>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <i class="fas fa-users fa-2x text-gray-300"></i>
+                                                    <i class="fas fa-person-circle-question fa-2x text-gray-300"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -125,14 +125,14 @@
                                                 <!--                                                <div class="col-auto">-->
                                                 <!--                                                    <i class="fas fa-person-circle-question fa-2x text-gray-300"></i>-->
                                                 <!--                                                </div>-->
-                                                <form th:action="@{/confirmedAgentsSearch}">
+                                                <form th:action="@{/awaitingConfirmationAgentsSearch}">
                                                     <div class="col mr-2" style="display: flex;justify-content: center;align-items: baseline">
 
                                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 col-auto">
 
                                                             <input id="searchText" name="searchText"
-                                                                  class="h5 mb-0 font-weight-bold text-gray-800" style="height: 35px"> <button type="submit"
-                                                                                                                                               class="btn btn-primary btn-user btn-block">
+                                                                   class="h5 mb-0 font-weight-bold text-gray-800" style="height: 35px"> <button type="submit"
+                                                                                                                                                class="btn btn-primary btn-user btn-block">
                                                             <i class="fa-solid fa-magnifying-glass fa-2x text-gray-300"></i>
                                                         </button></input>
                                                         </div>
@@ -188,7 +188,7 @@
                                         <p style="text-align: center" th:if="${agents}=='empty'">No Data Found</p>
                                         <p style="text-align: center" th:if="${agents == null}">No Match Found</p>
                                         <p style="text-align: center" th:if="${agents == null}"><a
-                                                th:if="${agents == null}" th:href="@{/confirmedAgentsList}"
+                                                th:if="${agents == null}" th:href="@{/awaitingConfirmationAgentsList}"
                                                 class="btn btn-primary">Back to full List
                                         </a>
                                         <div class="col-lg-4 col-md-6 d-flex" th:if="${agents != null and agents !='empty'}"

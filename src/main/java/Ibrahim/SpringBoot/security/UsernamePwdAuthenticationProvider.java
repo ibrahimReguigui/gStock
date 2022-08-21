@@ -4,6 +4,8 @@ import Ibrahim.SpringBoot.model.Agent;
 import Ibrahim.SpringBoot.model.AgentStatus;
 import Ibrahim.SpringBoot.model.Role;
 import Ibrahim.SpringBoot.repository.AgentRepository;
+import Ibrahim.SpringBoot.service.AgentServiceImp;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +27,8 @@ public class UsernamePwdAuthenticationProvider implements AuthenticationProvider
     private AgentRepository agentRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private HttpSession session;
 
     @Override
     public Authentication authenticate(Authentication authentication)
@@ -34,6 +39,7 @@ public class UsernamePwdAuthenticationProvider implements AuthenticationProvider
         if (null != agent && agent.getId() > 0 &&
                 passwordEncoder.matches(pwd, agent.getPwd()) &&
                 agent.getStatus().equals(AgentStatus.CONFIRMED)) {
+            session.setAttribute("LoggedInAgent", agent);
             return new UsernamePasswordAuthenticationToken(
                     email, null, getGrantedAuthorities(agent.getRole()));
         } else if (null != agent && agent.getId() > 0 &&

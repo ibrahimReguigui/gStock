@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -75,22 +76,27 @@ public class AgentContoller {
         return "finalizeRegistration.html";
     }
 
-    @GetMapping("/agentsList")
+    @GetMapping("/confirmedAgentsList")
     public String agentsList(HttpSession session, Model model) {
         Agent agent = (Agent) session.getAttribute("LoggedInAgent");
-        for (Agent employee: agentRepository.getAgentsByStore(agent.getStore().getId())){
-            String filename = employee.getId() + employee.getImage().substring(employee.getImage().length() - 4);
-            Path fileNameAndPath = Paths.get(System.getProperty("user.dir") + "/src/main/resources/static/Images", filename);
-            try {
-                Files.write(fileNameAndPath, employee.getImage().getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        model.addAttribute("agents", agentRepository.getAgentsByStore(agent.getStore().getId()));
+        List<Agent> list= agentRepository.getAgentsConfirmedByStore(agent.getStore().getId());
+        if (list.size()==0 ) {
+            model.addAttribute("agents","empty");
+        } else
+            model.addAttribute("agents", list);
         model.addAttribute("numberOfAgents", agentRepository.getNumberOfAgentByStore(agent.getStore().getId()));
-        model.addAttribute("awaitingAgents", agentRepository.getAwaitingConfirmationAgents(agent.getStore().getId()));
         return "agentsList.html";
+    }
+    @GetMapping("/awaitingConfirmationAgentsList")
+    public String awaitingConfirmationAgentsList(HttpSession session, Model model) {
+        Agent agent = (Agent) session.getAttribute("LoggedInAgent");
+        List<Agent> list=agentRepository.getAgentsAwaitingConfirmationByStore(agent.getStore().getId());
+        if (list.size()==0 ) {
+            model.addAttribute("agents","empty");
+        } else
+            model.addAttribute("agents", list);
+        model.addAttribute("awaitingAgents", agentRepository.getAwaitingConfirmationAgents(agent.getStore().getId()));
+        return "agentsListAwaitingConfirmation.html";
     }
 
 
@@ -223,26 +229,58 @@ public class AgentContoller {
 
     @PostMapping("/updateImage")
     public String updateImage(RedirectAttributes redirAttrs, @RequestParam MultipartFile file, HttpSession session, Model model) {
-        if (file.isEmpty()) {
-            redirAttrs.addFlashAttribute("pictureError", "You did not chose a picture !");
-            return "redirect:/updateProfile";
-        }
         Agent LoggedInAgent = (Agent) session.getAttribute("LoggedInAgent");
-
-        String filename = LoggedInAgent.getId() + file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4);
-        Path fileNameAndPath = Paths.get(System.getProperty("user.dir") + "/src/main/resources/static/Images", filename);
-        try {
-            Files.write(fileNameAndPath, file.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        LoggedInAgent.setImage(filename);
-        agentServiceImp.updateAgent(LoggedInAgent);
-        session.setAttribute("LoggedInAgent", LoggedInAgent);
-        Agent updatedLoggedInAgent = (Agent) session.getAttribute("LoggedInAgent");
-        model.addAttribute("LoggedInAgent", updatedLoggedInAgent);
+//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//        System.out.println(fileName);
+//        if(fileName.matches() list))
+//        {
+//
+//            redirAttrs.addFlashAttribute("errorImg", "Not a valid Image !");
+//            return "redirect:/updateProfile";
+//        }
+//       if (file.isEmpty()) {
+//            redirAttrs.addFlashAttribute("pictureError", "You did not chose a picture !");
+//            return "redirect:/updateProfile";
+//        }
+//
+//
+//        String filename = LoggedInAgent.getId() + file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4);
+//        Path fileNameAndPath = Paths.get(System.getProperty("user.dir") + "/src/main/resources/static/Images", filename);
+//        try {
+//            Files.write(fileNameAndPath, file.getBytes());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        LoggedInAgent.setImage(filename);
+//        agentServiceImp.updateAgent(LoggedInAgent);
+        agentServiceImp.updateAgentWithImage(LoggedInAgent, file);
+        Agent updatedLoggedInAgent = agentServiceImp.getAgentById(LoggedInAgent.getId());
+        session.setAttribute("LoggedInAgent", updatedLoggedInAgent);
         model.addAttribute("agent", updatedLoggedInAgent);
         redirAttrs.addFlashAttribute("success", "Photo updated !");
         return "redirect:/profile";
+    }
+
+    @GetMapping("/confirmedAgentsSearch")
+    public String confirmedAgentsSearch(@RequestParam String searchText, HttpSession session, Model model) {
+        Agent agent = (Agent) session.getAttribute("LoggedInAgent");
+        List<Agent> list=agentRepository.confirmedAgentsSearch(agent.getStore().getId(), searchText);
+        if (list.size()==0 ) {
+            model.addAttribute("agents",null);
+        } else
+            model.addAttribute("agents", list);
+        model.addAttribute("numberOfAgents", agentRepository.getNumberOfAgentByStore(agent.getStore().getId()));
+        return "agentsList.html";
+    }
+    @GetMapping("/awaitingConfirmationAgentsSearch")
+    public String awaitingConfirmationAgentsSearch(@RequestParam String searchText, HttpSession session, Model model) {
+        Agent agent = (Agent) session.getAttribute("LoggedInAgent");
+        List<Agent> list=agentRepository.awaitingConfirmationAgentsSearch(agent.getStore().getId(), searchText);
+        if (list.size()==0 ) {
+            model.addAttribute("agents",null);
+        } else
+            model.addAttribute("agents", list);
+        model.addAttribute("numberOfAgents", agentRepository.getNumberOfAgentByStore(agent.getStore().getId()));
+        return "agentsListAwaitingConfirmation.html";
     }
 }

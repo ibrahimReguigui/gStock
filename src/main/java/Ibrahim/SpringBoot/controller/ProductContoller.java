@@ -20,6 +20,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -95,41 +96,125 @@ public class ProductContoller {
         return mav;
     }
 
-    @PostMapping("/splitProduct")
-    public String splitProduct(@ModelAttribute Product product, HttpSession session, BindingResult bindingResult) {
-        Agent agent = (Agent) session.getAttribute("LoggedInAgent");
-        Product ancientP = productServiceImp.getProductById(product.getId());
-        if (ancientP.getQuantity() < product.getQuantity()) {
-            bindingResult.addError(new FieldError("product", "quantity", "Sorry insufficient quality in stock "));
-            return "splitProductForm";
+    @GetMapping( "/splitProduct" )
+    public String splitProduct(@RequestParam("wantedQuantity") Integer wantedQuantity, @RequestParam("productId") Integer productId, HttpSession session, RedirectAttributes redirAttrs) {
+        Product wantedProduct=productServiceImp.getProductById(productId);
+        if(wantedQuantity>wantedProduct.getQuantity()){
+            redirAttrs.addFlashAttribute("wantedSup", "Sorry insufficient quality in stock !");
+            return "redirect:/addProductToBillForm";
         }
-        if (product.getQuantity() == 0) {
+        if(wantedQuantity<1){
+            redirAttrs.addFlashAttribute("wantedInf", "Quantity can't be below 1 !");
+            return "redirect:/addProductToBillForm";
+        }
+        if(wantedQuantity==0){
             return "redirect:/addProductToBillForm";
         }
 
-        Product newP = new Product();
-        newP.setStore(sServ.getStoreById(agent.getStore().getId()));
-        newP.setCategories(ancientP.getCategories());
-        newP.setName(ancientP.getName());
-        newP.setPrice(ancientP.getPrice());
-        newP.setReference(ancientP.getReference());
-        newP.setQuantity(product.getQuantity());
-        newP.setCreatedBy(ancientP.getCreatedBy());
-        newP.setCreatedAt(ancientP.getCreatedAt());
-        Bill bill = (Bill) session.getAttribute("bill");
-        Bill bill2=billServiceImp.getBillById(bill.getId());
-        newP.setBill(bill2);
-        productServiceImp.saveProduct(newP);
+        Bill sbill = (Bill) session.getAttribute("bill");
+        Bill bill=billServiceImp.getBillById(sbill.getId());
 
+        Product billProduct=new Product();
+        billProduct.setBill(bill);
+        billProduct.setQuantity(wantedQuantity);
+        billProduct.setReference(wantedProduct.getReference());
+        billProduct.setName(wantedProduct.getName());
+        billProduct.setPrice(wantedProduct.getPrice());
+        billProduct.setCategories(wantedProduct.getCategories());
+        billProduct.setStore(wantedProduct.getStore());
 
-        ancientP.setQuantity(ancientP.getQuantity() - newP.getQuantity());
-        bill2.setTotal(bill2.getTotal() + newP.getQuantity() * newP.getPrice());
-        billServiceImp.saveBill(bill2);
-        if (ancientP.getQuantity() == 0) {
-            productServiceImp.deleteProduct(ancientP.getId());
-        } else {
-            productServiceImp.saveProduct(ancientP);
-        }
+        wantedProduct.setQuantity(wantedProduct.getQuantity()-wantedQuantity);
+
+        if (wantedProduct.getQuantity()==0){
+            productServiceImp.deleteProduct(wantedProduct.getId());
+        }else
+            productServiceImp.saveProduct(wantedProduct);
+
+        productServiceImp.saveProduct(billProduct);
+
+        bill.setTotal(sbill.getTotal()+billProduct.getQuantity()* billProduct.getPrice());
+        billServiceImp.saveBill(bill);
+
         return "redirect:/addProductToBillForm";
+
+
+//        Agent agent = (Agent) session.getAttribute("LoggedInAgent");
+//        Product ancientP = productServiceImp.getProductById(product.getId());
+//        if (ancientP.getQuantity() < product.getQuantity()) {
+//            bindingResult.addError(new FieldError("product", "quantity", "Sorry insufficient quality in stock "));
+//            return "splitProductForm";
+//        }
+//        if (product.getQuantity() == 0) {
+//            return "redirect:/addProductToBillForm";
+//        }
+//
+//        Product newP = new Product();
+//        newP.setStore(sServ.getStoreById(agent.getStore().getId()));
+//        newP.setCategories(ancientP.getCategories());
+//        newP.setName(ancientP.getName());
+//        newP.setPrice(ancientP.getPrice());
+//        newP.setReference(ancientP.getReference());
+//        newP.setQuantity(product.getQuantity());
+//        newP.setCreatedBy(ancientP.getCreatedBy());
+//        newP.setCreatedAt(ancientP.getCreatedAt());
+//        Bill bill = (Bill) session.getAttribute("bill");
+//        Bill bill2=billServiceImp.getBillById(bill.getId());
+//        newP.setBill(bill2);
+//        productServiceImp.saveProduct(newP);
+//
+//
+//        ancientP.setQuantity(ancientP.getQuantity() - newP.getQuantity());
+//        bill2.setTotal(bill2.getTotal() + newP.getQuantity() * newP.getPrice());
+//        billServiceImp.saveBill(bill2);
+//        if (ancientP.getQuantity() == 0) {
+//            productServiceImp.deleteProduct(ancientP.getId());
+//        } else {
+//            productServiceImp.saveProduct(ancientP);
+//        }
+
+
     }
-}
+
+    @GetMapping( "/splitProductBillDetails" )
+    public String splitProductBillDetails(@RequestParam("wantedQuantity") Integer wantedQuantity, @RequestParam("productId") Integer productId,@RequestParam("billId") Integer billId, HttpSession session, RedirectAttributes redirAttrs) {
+        Product wantedProduct = productServiceImp.getProductById(productId);
+        if (wantedQuantity > wantedProduct.getQuantity()) {
+            redirAttrs.addFlashAttribute("wantedSup", "Sorry insufficient quality in stock !");
+            return "redirect:/billDetails?billId=" + billId;
+        }
+        if (wantedQuantity < 1) {
+            redirAttrs.addFlashAttribute("wantedInf", "Quantity can't be below 1 !");
+            return "redirect:/billDetails?billId=" + billId;
+        }
+        if (wantedQuantity == 0) {
+            return "redirect:/billDetails?billId=" + billId;
+        }
+
+
+        Bill bill = billServiceImp.getBillById(billId);
+
+        Product billProduct = new Product();
+        billProduct.setBill(bill);
+        billProduct.setQuantity(wantedQuantity);
+        billProduct.setReference(wantedProduct.getReference());
+        billProduct.setName(wantedProduct.getName());
+        billProduct.setPrice(wantedProduct.getPrice());
+        billProduct.setCategories(wantedProduct.getCategories());
+        billProduct.setStore(wantedProduct.getStore());
+
+        wantedProduct.setQuantity(wantedProduct.getQuantity() - wantedQuantity);
+
+        if (wantedProduct.getQuantity() == 0) {
+            productServiceImp.deleteProduct(wantedProduct.getId());
+        } else
+            productServiceImp.saveProduct(wantedProduct);
+
+        productServiceImp.saveProduct(billProduct);
+
+        bill.setTotal(bill.getTotal() + billProduct.getQuantity() * billProduct.getPrice());
+        billServiceImp.saveBill(bill);
+
+        return "redirect:/billDetails?billId=" + billId;
+
+    }
+    }

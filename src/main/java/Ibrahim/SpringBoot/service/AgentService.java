@@ -27,4 +27,7 @@ public interface AgentService {
 
     Integer getNumberOfAgentByStore(Long id);
     Integer getAwaitingConfirmationAgents(Long id);
+    List<Agent> confirmedAgentsSearch(Long id,String searchTxt);
+    List<Agent> getAgentsConfirmedByStore(Long id);
+    List<Agent> getAgentsAwaitingConfirmationByStore(Long id);
 }

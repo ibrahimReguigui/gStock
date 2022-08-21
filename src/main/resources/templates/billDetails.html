@@ -69,6 +69,79 @@
                     <li>Bill Details</li>
                 </ol>
             </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">In Stock Products</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <div class="container-fluid">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="dataTable" width="100%"
+                                                       cellspacing="0">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Reference</th>
+                                                        <th>Name</th>
+                                                        <th>Categorie</th>
+                                                        <th>Quantity</th>
+                                                        <th>Price</th>
+                                                        <th>Reserver</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr th:each="product:${products}">
+                                                        <td th:text="${product.reference}"></td>
+                                                        <td th:text="${product.name}"></td>
+                                                        <td th:text="${product.categories}"></td>
+                                                        <td th:text="${product.quantity}"></td>
+                                                        <td th:text="${product.price}"></td>
+                                                        <td>
+                                                            <table>
+                                                                <tr>
+                                                                    <td>
+                                                                        <form th:action="@{/splitProductBillDetails}" >
+
+                                                                            <input id="wantedQuantity" name="wantedQuantity"
+                                                                                   style="width: 60px">
+                                                                            <input type="hidden" th:value="${product.id}" id="productId" name="productId">
+                                                                            <input type="hidden" th:value="${bill.id}" id="billId" name="billId">
+                                                                            <button class="btn btn-info">Part</button>
+                                                                        </form>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a th:href="@{/addProductToBillDetails(productId=${product.id},billId=${bill.id})}"
+                                                                           class="btn btn-info">All</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </nav>
     </div><!-- End Breadcrumbs -->
     <div style="text-align: center" class="alert alert-primary" role="alert" th:text="${success}"
@@ -99,8 +172,15 @@
                         <a class="btn btn-secondary ml-2" th:href="@{/showBills}">Back</a>
                         <a sec:authorize="hasRole('ROLE_MANAGER')" class="btn btn-danger ml-2"
                            th:href="@{/cancelBill(billId=${bill.getId()})}">Cancel</a>
-                        <a th:href="@{/createPdf(billId=${bill.id})}" class="btn btn-primary ml-2 "> Download </a>
-
+                        <a sec:authorize="hasRole('ROLE_VENDOR')"   th:if="${bill.status == 'Instance'}"class="btn btn-danger ml-2"
+                           th:href="@{/cancelBill(billId=${bill.getId()})}">Cancel</a>
+                        <a sec:authorize="hasAnyRole('ROLE_VENDOR','ROLE_MANAGER')"   th:if="${bill.status == 'Instance'}"
+                           th:href="@{/confirmBill(billId=${bill.id})}"class="btn btn-success ml-2">Confirm</a>
+                        <a  th:if="${bill.status == 'Confirmed'}"th:href="@{/createPdf(billId=${bill.id})}" class="btn btn-primary ml-2 "> Download </a>
+                        <button sec:authorize="hasAnyRole('ROLE_VENDOR','ROLE_MANAGER')"    th:if="${bill.status == 'Instance'}"type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#exampleModalLong">
+                            Add Products
+                        </button>
                     </div>
                 </div>
 
@@ -114,8 +194,14 @@
                                 <div class="container-fluid">
                                     <div class="card shadow mb-4">
                                         <div class="card-body">
+                                            <div style="text-align: center" class="alert alert-danger" role="alert"
+                                                 th:text="${wantedSup}"
+                                                 th:if="${wantedSup}"></div>
+                                            <div style="text-align: center" class="alert alert-danger" role="alert"
+                                                 th:text="${wantedInf}"
+                                                 th:if="${wantedInf}"></div>
                                             <div class="table-responsive">
-                                                <table class="table table-bordered" id="dataTable" width="100%"
+                                                <table class="table table-bordered"  width="100%"
                                                        cellspacing="0">
                                                     <thead>
                                                     <tr>
@@ -125,6 +211,8 @@
                                                         <th>Quantity</th>
                                                         <th>Price</th>
                                                         <th sec:authorize="hasRole('ROLE_MANAGER')">Actions</th>
+                                                        <th sec:authorize="hasRole('ROLE_VENDOR')"   th:if="${bill.status == 'Instance'}">Actions</th>
+
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -137,6 +225,12 @@
                                                         <td sec:authorize="hasRole('ROLE_MANAGER')">
                                                             <a th:href="@{/removeProductBillDetails(productId=${pb.id})}"
                                                                class="btn btn-danger ml-2 ">Remove</a>
+
+                                                        </td>
+                                                        <td sec:authorize="hasRole('ROLE_VENDOR')"   th:if="${bill.status == 'Instance'}">
+                                                            <a th:href="@{/removeProductBillDetails(productId=${pb.id})}"
+                                                               class="btn btn-danger ml-2 "
+                                                            >Remove</a>
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -169,6 +263,24 @@
 <div id="preloader"></div>
 
 <!-- Vendor JS Files -->
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="js/demo/datatables-demo.js"></script>
+<!---->
+<!-- Vendor JS Files -->
 <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
 <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
@@ -178,6 +290,7 @@
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
+
 
 </body>
 

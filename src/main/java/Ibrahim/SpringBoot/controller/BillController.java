@@ -88,6 +88,16 @@ public class BillController {
         billServiceImp.saveBill(bill);
         return "redirect:/addProductToBillForm";
     }
+    @GetMapping("/addProductToBillDetails")
+    public String addProductToBillDetails(@RequestParam Integer productId,@RequestParam Integer billId,  HttpSession session) {
+        Product product = productServiceImp.getProductById(productId);
+        Bill bill = billServiceImp.getBillById(billId);
+        product.setBill(bill);
+        productServiceImp.saveProduct(product);
+        bill.setTotal(bill.getTotal() + product.getQuantity() * product.getPrice());
+        billServiceImp.saveBill(bill);
+        return "redirect:/billDetails?billId=" + billId;
+    }
 
     @GetMapping("/cancelBill")
     public String cancelBill(@RequestParam Integer billId) {
@@ -159,6 +169,7 @@ public class BillController {
         Bill bill = billServiceImp.getBillById(billId);
         model.addAttribute("bill", bill);
         model.addAttribute("username", agent.getName());
+        model.addAttribute("products", pRepo.getAllStoreProduct(agent.getStore().getId()));
         model.addAttribute("billProducts", bRep.getBillProducts(bill.getId()));
         return "billDetails";
     }
