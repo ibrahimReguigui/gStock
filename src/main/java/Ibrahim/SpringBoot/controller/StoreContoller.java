@@ -32,11 +32,13 @@ public class StoreContoller {
     @PostMapping("/saveStore")
     public String saveProduct(@Valid @ModelAttribute Store newS, Errors errors, @ModelAttribute Agent newA, BindingResult bindingResult) {
         if (storeServiceImp.numberExist(newS.getStoreNumber())) {
-            bindingResult.addError(new FieldError("store", "storeNumber", "Number already in use !!"));
+            FieldError err=new FieldError("store", "storeNumber", "Number already in use !!");
+            bindingResult.addError(err);
+            System.out.println("Number already in use !!");
         }
         if (errors.hasErrors()||bindingResult.hasErrors()) {
             log.error("form error :" + errors.toString());
-            return "store-Registration-Form.html";
+            return "store-Registration-Form";
         }
         storeServiceImp.saveStore(newS);
         Store store = storeServiceImp.getStoreByStoreNumber(newS.getStoreNumber());

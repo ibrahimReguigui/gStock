@@ -6,13 +6,13 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Logis Bootstrap Template - Services</title>
+    <title>GStock - Agents</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon">
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="Images/LogoGStock.png" rel="icon">
+    <link href="static/Images/LogoGStock.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,7 +68,7 @@
                 <ol>
                     <li><a th:href="@{/agentsList}">Agents</a></li>
                     <li>Agents List</li>
-                    <li>Confirmed Agents</li>
+                    <li>Awaiting Confirmation Agents</li>
                 </ol>
             </div>
         </nav>
@@ -195,6 +195,7 @@
                                              th:each="agent:${agents}">
                                             <div class="member">
                                                 <img th:src="|data:image/png;base64,${agent.image}|" class=" img-fluid"
+                                                     onerror="this.onerror=null;this.src='https://assets.zeezest.com/users/PROD_Generic%20Photo_1640418549546.jpg'"
                                                      style="width: 300px;height: 300px"/>
                                                 <div class="member-content">
                                                     <h4 th:text="${agent.name}">Walter White</h4>
@@ -205,7 +206,7 @@
                                                     <span th:text="${agent.status.status}"></span>
                                                     <hr>
                                                     <div class="social">
-                                                        <a th:href="@{/deleteAgent(agentId=${agent.id})}"
+                                                        <a th:href="@{/deleteAgentawaitingConfirmationAgentsList(agentId=${agent.id})}"
                                                            class="btn btn-danger ml-2 "><i
                                                                 class="fa-trash fa-solid"></i></a>
                                                         <a th:href="@{/updateAgentForm(agentId=${agent.id})}"

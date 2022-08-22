@@ -6,13 +6,13 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Logis Bootstrap Template - Services</title>
+    <title>GStock - Agents</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon">
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="Images/LogoGStock.png" rel="icon">
+    <link href="static/Images/LogoGStock.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,7 +80,8 @@
             <div class="row" >
                 <div class="col-lg-5 d-none d-lg-block ">
                     <img th:src="|data:image/png;base64,${agent.image}|"
-                         style="background-position: center;height:100%;width:100%;background-size: cover">
+                         onerror="this.onerror=null;this.src='https://assets.zeezest.com/users/PROD_Generic%20Photo_1640418549546.jpg'"
+                         style="background-position: center;height:350PX;width:100%;background-size: cover">
                 </div>
                 <div class="col-lg-7">
                     <form th:action="@{/updateAgent}" th:object="${agent}" method="post" role="form"
@@ -89,7 +90,7 @@
                             <h4 class="col-sm-2 col-form-label ">Name</h4>
                             <div class="col-md-6 form-group">
                                 <input type="text" name="name" th:field="*{name}" class="form-control col-4 mb-4"
-                                       placeholder="Product reference" readonly>
+                                       placeholder="Product reference" >
                                 <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
                                      class="alert alert-danger "></div>
                             </div>
@@ -140,7 +141,7 @@
                         <input type="hidden" th:field="*{pwd}">
                         <div style="display: flex;gap: 350px;">
                             <a class="btn btn-secondary ml-2"
-                               th:href="@{/agentsList}">Back</a>
+                               th:href="@{/confirmedAgentsList}">Back</a>
                             <div class="text-center">
                                 <button class="btn btn-primary ml-2" type="submit">Save</button>
                             </div>

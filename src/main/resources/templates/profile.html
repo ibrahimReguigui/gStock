@@ -6,13 +6,13 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Logis Bootstrap Template - Services</title>
+    <title>GStock - Profile</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon">
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="Images/LogoGStock.png" rel="icon">
+    <link href="static/Images/LogoGStock.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -93,7 +93,9 @@
                     <div style="display: flex;justify-content: center;align-content: center">
                     <div class="card mb-4" style="width: 400px">
                         <div class="card-body text-center">
-                            <img th:src="|data:image/png;base64,${LoggedInAgent.image}|" alt="Missing picture !"  class="rounded-circle img-fluid" style="width: 300px;height: 300px"/>
+                            <img th:src="|data:image/png;base64,${LoggedInAgent.image}|"
+                                 onerror="this.onerror=null;this.src='https://assets.zeezest.com/users/PROD_Generic%20Photo_1640418549546.jpg'"
+                                 class="rounded-circle img-fluid" style="width: 300px;height: 300px"/>
                         </div>
                     </div>
                     </div>
@@ -148,8 +150,8 @@
                                         Francisco, CA</p>
                                 </div>
                             </div>
-                            <hr>
-                            <div class="row">
+                            <hr sec:authorize="hasAnyRole('ROLE_VENDOR','ROLE_MANAGER')"  >
+                            <div class="row" sec:authorize="hasAnyRole('ROLE_VENDOR','ROLE_MANAGER')"  >
                                 <div class="col-sm-3">
                                     <p class="mb-0">Status</p>
                                 </div>

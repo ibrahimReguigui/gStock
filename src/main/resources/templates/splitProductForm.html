@@ -6,13 +6,13 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Logis Bootstrap Template - Services</title>
+    <title>GStock - Products</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon">
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="Images/LogoGStock.png" rel="icon">
+    <link href="static/Images/LogoGStock.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -76,8 +76,6 @@
     </div><!-- End Breadcrumbs -->
 
 
-
-
     <section id="contact" class="contact">
         <div class="container" data-aos="fade-up">
 
@@ -87,62 +85,65 @@
                     <h4>How much do you need ?</h4><br>
                     <div style="text-align: center">
                         <ul>
-                            <p class="alert alert-danger"  th:each="error :${#fields.errors('product.*')}" th:text="
+                            <p class="alert alert-danger" th:each="error :${#fields.errors('product.*')}" th:text="
                 ${error}"/>
                         </ul>
                     </div>
                 </div>
 
-                                <form th:action="@{/splitProduct}" th:object="${product}" method="POST"role="form"
-                                      style="width: 100%;background: #fff;">
+                <form th:action="@{/splitProduct}" th:object="${product}" method="POST" role="form"
+                      style="width: 100%;background: #fff;">
 
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Reference</label>
-                                        <div class="col-md-6 form-group">
-                                            <input type="text" th:field="*{reference}" th:value="*{reference}"
-                                                   class="form-control col-4 mb-4" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Name</label>
-                                        <div class="col-md-6 form-group">
-                                            <input type="text" th:field="*{name}" th:value="*{name}"
-                                                   class="form-control col-4 mb-4" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Categorie</label>
-                                        <div class="col-md-6 form-group">
-                                            <input type="text" th:field="*{categories}" th:value="*{categories}"
-                                                   class="form-control col-4 mb-4" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Price</label>
-                                        <div class="col-md-6 form-group">
-                                            <input type="text" th:field="*{price}" th:value="*{price}"
-                                                   class="form-control col-4 mb-4" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Quantity Available</label>
-                                        <div class="col-md-6 form-group">
-                                            <p type="text" th:text="*{quantity}" class="form-control col-4 mb-4">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Wanted Quantity</label>
-                                    <div class="col-md-6 form-group">
-                                        <input type="text" th:field="*{quantity}" placeholder="Enter quantity"
-                                               class="form-control col-4 mb-4">
-                                    </div></div>
-                                    <input type="hidden" th:field="*{id}">
-                                    <div style="display: flex;gap: 450px;">
-                                    <a class="btn btn-secondary ml-2" th:href="@{/addProductToBillForm}">Back</a>
-                                    <button class="btn btn-primary ml-2" type="submit">Reserver</button>
-                                    </div>
-                                </form>
-            </div></div></div></div></section>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Reference</label>
+                        <div class="col-md-6 form-group">
+                            <input type="text" th:field="*{reference}" th:value="*{reference}"
+                                   class="form-control col-4 mb-4" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Name</label>
+                        <div class="col-md-6 form-group">
+                            <input type="text" th:field="*{name}" th:value="*{name}"
+                                   class="form-control col-4 mb-4" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Categorie</label>
+                        <div class="col-md-6 form-group">
+                            <input type="text" th:field="*{categories}" th:value="*{categories}"
+                                   class="form-control col-4 mb-4" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Price</label>
+                        <div class="col-md-6 form-group">
+                            <input type="text" th:field="*{price}" th:value="*{price}"
+                                   class="form-control col-4 mb-4" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Quantity Available</label>
+                        <div class="col-md-6 form-group">
+                            <p type="text" th:text="*{quantity}" class="form-control col-4 mb-4">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Wanted Quantity</label>
+                        <div class="col-md-6 form-group">
+                            <input type="text" th:field="*{quantity}" placeholder="Enter quantity"
+                                   class="form-control col-4 mb-4">
+                        </div>
+                    </div>
+                    <input type="hidden" th:field="*{id}">
+                    <div style="display: flex;gap: 450px;">
+                        <a class="btn btn-secondary ml-2" th:href="@{/addProductToBillForm}">Back</a>
+                        <button class="btn btn-primary ml-2" type="submit">Reserver</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div></div></section>
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->

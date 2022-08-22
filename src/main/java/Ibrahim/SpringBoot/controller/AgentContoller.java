@@ -99,11 +99,20 @@ public class AgentContoller {
         return "agentsListAwaitingConfirmation.html";
     }
 
-
     @GetMapping("/deleteAgent")
     public String deleteAgent(@RequestParam Integer agentId) {
         agentServiceImp.deleteAgent(agentId);
-        return "redirect:/agentsList";
+        return "redirect:/confirmedAgentsList";
+    }
+    @GetMapping("/deleteAgentawaitingConfirmationAgentsList")
+    public String deleteAgentawaitingConfirmationAgentsList(@RequestParam Integer agentId) {
+        agentServiceImp.deleteAgent(agentId);
+        return "redirect:/awaitingConfirmationAgentsList";
+    }
+    @GetMapping("/deleteAgentconfirmedAgentsList")
+    public String deleteAgentconfirmedAgentsList(@RequestParam Integer agentId) {
+        agentServiceImp.deleteAgent(agentId);
+        return "redirect:/confirmedAgentsList";
     }
 
     @GetMapping("/updateAgentForm")
@@ -123,10 +132,11 @@ public class AgentContoller {
     @PostMapping("updateAgent")
     public String updateAgent(@ModelAttribute Agent newA) {
         Agent agent = agentServiceImp.getAgentById(newA.getId());
+        agent.setName(newA.getName());
         agent.setRole(newA.getRole());
         agent.setStatus(newA.getStatus());
         agentServiceImp.updateAgent(agent);
-        return "redirect:/agentsList";
+        return "redirect:/confirmedAgentsList";
     }
 
     @GetMapping("/profile")
@@ -230,20 +240,20 @@ public class AgentContoller {
     @PostMapping("/updateImage")
     public String updateImage(RedirectAttributes redirAttrs, @RequestParam MultipartFile file, HttpSession session, Model model) {
         Agent LoggedInAgent = (Agent) session.getAttribute("LoggedInAgent");
-//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-//        System.out.println(fileName);
-//        if(fileName.matches() list))
-//        {
-//
-//            redirAttrs.addFlashAttribute("errorImg", "Not a valid Image !");
-//            return "redirect:/updateProfile";
-//        }
-//       if (file.isEmpty()) {
-//            redirAttrs.addFlashAttribute("pictureError", "You did not chose a picture !");
-//            return "redirect:/updateProfile";
-//        }
-//
-//
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        System.out.println(fileName);
+        if (fileName.contains(".png")|| fileName.contains(".jpeg") || fileName.contains(".jpg")){
+            agentServiceImp.updateAgentWithImage(LoggedInAgent, file);
+            Agent updatedLoggedInAgent = agentServiceImp.getAgentById(LoggedInAgent.getId());
+            session.setAttribute("LoggedInAgent", updatedLoggedInAgent);
+            model.addAttribute("agent", updatedLoggedInAgent);
+            redirAttrs.addFlashAttribute("success", "Photo updated !");
+            return "redirect:/profile";
+
+        }else
+            redirAttrs.addFlashAttribute("errorImg", "Not a valid Image !");
+            return "redirect:/updateProfile";
+
 //        String filename = LoggedInAgent.getId() + file.getOriginalFilename().substring(file.getOriginalFilename().length() - 4);
 //        Path fileNameAndPath = Paths.get(System.getProperty("user.dir") + "/src/main/resources/static/Images", filename);
 //        try {
@@ -253,12 +263,7 @@ public class AgentContoller {
 //        }
 //        LoggedInAgent.setImage(filename);
 //        agentServiceImp.updateAgent(LoggedInAgent);
-        agentServiceImp.updateAgentWithImage(LoggedInAgent, file);
-        Agent updatedLoggedInAgent = agentServiceImp.getAgentById(LoggedInAgent.getId());
-        session.setAttribute("LoggedInAgent", updatedLoggedInAgent);
-        model.addAttribute("agent", updatedLoggedInAgent);
-        redirAttrs.addFlashAttribute("success", "Photo updated !");
-        return "redirect:/profile";
+
     }
 
     @GetMapping("/confirmedAgentsSearch")

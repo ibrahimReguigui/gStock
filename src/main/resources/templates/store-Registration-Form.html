@@ -9,7 +9,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Register</title>
+    <title>GStock - Registration</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="Images/LogoGStock.png" rel="icon">
+    <link href="static/Images/LogoGStock.png" rel="apple-touch-icon">
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -43,11 +49,9 @@
                             <div class="form-group ">
                                 <div class="form-group">
                                     <input type="text" th:field="*{storeName}" class="form-control form-control-user"
-
                                            placeholder="Store Name">
                                     <div th:if="${#fields.hasErrors('storeName')}" th:errors="*{storeName}"
                                          class="alert alert-danger "></div>
-
                                 </div>
                                 <div class="form-group">
 
@@ -58,14 +62,15 @@
                                          class="alert alert-danger "></div>
                                 </div>
                                 <div class="form-group">
-
                                     <input type="text" th:field="*{storeNumber}"
                                            class="form-control form-control-user"
                                            placeholder="Store Number">
                                     <div th:if="${#fields.hasErrors('storeNumber')}" th:errors="*{storeNumber}"
                                          class="alert alert-danger "></div>
+                                    <div style="text-align: center" class="alert alert-danger" role="alert"
+                                         th:text="${numerExist}"
+                                         th:if="${numerExist}"></div>
                                 </div>
-
                                 <hr>
                             </div>
                             <div type="hidden" th:object="${agent}">
